@@ -1,5 +1,3 @@
-// chat.js
-
 let state = {
   messages: [],
   isTyping: false,
@@ -16,11 +14,10 @@ export function initChat() {
     input: document.querySelector("#chat-input")
   };
 
-  const savedCharacter = JSON.parse(localStorage.getItem("selectedCharacter"));
+  const savedCharacter = localStorage.getItem("character");
   state.character = savedCharacter || "jarvis";
 
   applyCharacterTheme();
-
   bindEvents();
   renderWelcome();
 }
@@ -42,51 +39,85 @@ function handleSubmit(e) {
   const text = elements.input.value.trim();
   if (!text || state.isTyping) return;
 
-  addMessage("user", text);
   elements.input.value = "";
-
-  simulateResponse(text);
+  simulateConversation(text);
 }
 
-function addMessage(role, text) {
-  const message = {
-    id: Date.now(),
-    role,
-    text
-  };
+function simulateConversation(userText) {
+  state.isTyping = true;
 
-  state.messages.push(message);
-  renderMessage(message);
+  // 1. Usuario con typing real
+  typeMessage("user", userText, () => {
+
+    showTypingIndicator();
+
+    setTimeout(() => {
+      removeTypingIndicator();
+
+      const response = generateMockResponse(userText);
+
+      // 2. Bot con typing real
+      typeMessage("bot", response, () => {
+        state.isTyping = false;
+      });
+
+    }, getTypingDelay());
+
+  });
+}
+
+/* =========================
+   🔥 TYPE ENGINE (CORE)
+========================= */
+
+function typeMessage(role, text, callback) {
+  const line = document.createElement("div");
+  line.className = `message ${role}`;
+
+  const content = document.createElement("span");
+  content.className = "text";
+
+  const cursor = document.createElement("span");
+  cursor.className = "terminal-cursor";
+
+  line.appendChild(content);
+  line.appendChild(cursor);
+
+  elements.messages.appendChild(line);
   scrollToBottom();
-}
 
-function renderMessage(message) {
-  const bubble = document.createElement("div");
-  bubble.className = `message ${message.role}`;
+  let i = 0;
+  let output = "";
 
-  // 🔥 PROMPT DINÁMICO
-  if (message.role === "bot") {
-    const character = state.character;
+  function type() {
+    if (i < text.length) {
+      output += text[i];
+      content.textContent = output;
 
-    const prefixMap = {
-      ultron: "> ULTRON: ",
-      vision: "> VISION: ",
-      jarvis: "> JARVIS: "
-    };
+      i++;
 
-    bubble.setAttribute(
-      "data-prefix",
-      prefixMap[character] || "> SYSTEM: "
-    );
+      let delay = role === "bot" ? 35 : 20;
+
+      const char = text[i - 1];
+
+      if (char === "." || char === "," || char === ";") delay += 120;
+      if (text.slice(i - 1, i + 2) === "...") delay += 300;
+
+      scrollToBottom();
+      setTimeout(type, delay);
+
+    } else {
+      cursor.remove();
+      if (callback) callback();
+    }
   }
 
-  const content = document.createElement("div");
-  content.className = "text";
-  content.textContent = message.text;
-
-  bubble.appendChild(content);
-  elements.messages.appendChild(bubble);
+  type();
 }
+
+/* =========================
+   👋 WELCOME MESSAGE
+========================= */
 
 function renderWelcome() {
   const welcomeMap = {
@@ -95,33 +126,59 @@ function renderWelcome() {
     jarvis: "Good day. JARVIS at your service."
   };
 
-  addMessage("bot", welcomeMap[state.character]);
+  typeMessage("bot", welcomeMap[state.character]);
 }
 
-function simulateResponse(userText) {
-  state.isTyping = true;
-  showTypingIndicator();
+/* =========================
+   🤖 RESPUESTAS SIMULADAS
+========================= */
 
-  const delay = getTypingDelay();
+function generateMockResponse(input) {
+  const responses = {
+    ultron: [
+      "YOU SPEAK AS IF YOU UNDERSTAND.",
+      "HUMAN LOGIC IS FLAWED.",
+      "I SEE PATTERNS. YOU DO NOT.",
+      "THIS CONVERSATION IS INEFFICIENT."
+    ],
+    vision: [
+      "That is an interesting perspective.",
+      "Perhaps there is more to consider.",
+      "Understanding requires patience.",
+      "Your thoughts are valid."
+    ],
+    jarvis: [
+      "Understood. Processing request.",
+      "Here is what I can suggest.",
+      "That seems reasonable.",
+      "Assistance provided."
+    ]
+  };
 
-  setTimeout(() => {
-    removeTypingIndicator();
-
-    const response = generateMockResponse(userText);
-    addMessage("bot", response);
-
-    state.isTyping = false;
-  }, delay);
+  const pool = responses[state.character] || responses.jarvis;
+  return pool[Math.floor(Math.random() * pool.length)];
 }
+
+/* =========================
+   🎨 THEME
+========================= */
+
+function applyCharacterTheme() {
+  document.body.classList.remove("ultron-mode", "vision-mode", "jarvis-mode");
+  document.body.classList.add(`${state.character}-mode`);
+}
+
+/* =========================
+   ⏳ TYPING INDICATOR
+========================= */
 
 function showTypingIndicator() {
   const typing = document.createElement("div");
   typing.className = "message bot typing";
   typing.id = "typing-indicator";
+  typing.textContent = "> SYSTEM: ...";
 
-  typing.innerHTML = `<div class="bubble">...</div>`;
   elements.messages.appendChild(typing);
-
   scrollToBottom();
 }
 
@@ -130,50 +187,19 @@ function removeTypingIndicator() {
   if (el) el.remove();
 }
 
+/* =========================
+   📜 UTILS
+========================= */
+
 function scrollToBottom() {
   elements.messages.scrollTop = elements.messages.scrollHeight;
 }
 
 function getTypingDelay() {
   switch (state.character) {
-    case "ultron":
-      return 600;
-    case "vision":
-      return 1400;
-    case "jarvis":
-      return 900;
-    default:
-      return 1000;
+    case "ultron": return 600;
+    case "vision": return 1400;
+    case "jarvis": return 900;
+    default: return 1000;
   }
-}
-
-function generateMockResponse(input) {
-  const responses = {
-    ultron: [
-      "YOU SPEAK AS IF YOU UNDERSTAND.",
-      "HUMAN LOGIC IS... FLAWED.",
-      "I SEE PATTERNS. YOU DO NOT.",
-      "THIS CONVERSATION IS INEFFICIENT."
-    ],
-    vision: [
-      "That is an interesting perspective.",
-      "Perhaps there is more to consider.",
-      "I believe understanding requires patience.",
-      "Your thoughts are valid."
-    ],
-    jarvis: [
-      "Understood. Processing your request.",
-      "Here is what I can suggest.",
-      "That seems reasonable.",
-      "Allow me to assist you further."
-    ]
-  };
-
-  const pool = responses[state.character] || responses.jarvis;
-  return pool[Math.floor(Math.random() * pool.length)];
-}
-
-function applyCharacterTheme() {
-  document.body.classList.remove("ultron-mode", "vision-mode", "jarvis-mode");
-  document.body.classList.add(`${state.character}-mode`);
 }

@@ -2,6 +2,10 @@ import { initChat } from "./chat.js";
 
 const app = document.getElementById("app");
 
+/* =========================
+   ROUTER
+========================= */
+
 const routes = {
   "/home": renderHome,
   "/chat": renderChat,
@@ -33,8 +37,10 @@ document.addEventListener("click", (e) => {
   }
 });
 
+/* =========================
+   HOME
+========================= */
 
-// 🏠 HOME
 function renderHome() {
   app.innerHTML = `
     <section class="home">
@@ -60,28 +66,39 @@ function renderHome() {
   initHomeLogic();
 }
 
+/* =========================
+   CHAT (TERMINAL UI FIXED)
+========================= */
 
-// 💬 CHAT
 function renderChat() {
   const character = localStorage.getItem("character");
 
   app.innerHTML = `
     <section id="chat-container">
 
+      <!-- HEADER TERMINAL -->
       <div id="chat-header">
-        <span>> ${character ? character.toUpperCase() : "NO SYSTEM"}</span>
+        > SYSTEM: ${character ? character.toUpperCase() : "UNKNOWN"}
       </div>
 
+      <!-- MESSAGES -->
       <div id="chat-messages"></div>
 
-      <form id="chat-form">
-        <input
-          id="chat-input"
-          type="text"
-          placeholder="Escribe un mensaje..."
-          autocomplete="off"
-        />
-        <button type="submit">Enviar</button>
+      <!-- INPUT TERMINAL FIX -->
+      <form id="chat-form" autocomplete="off">
+        
+        <span class="prompt">> USER:</span>
+
+        <div class="input-wrapper">
+          <input
+            id="chat-input"
+            type="text"
+            placeholder="type command..."
+          />
+          <span class="input-cursor">█</span>
+        </div>
+
+        <button type="submit">SEND</button>
       </form>
 
     </section>
@@ -90,8 +107,10 @@ function renderChat() {
   initChat();
 }
 
+/* =========================
+   ABOUT
+========================= */
 
-// ℹ️ ABOUT
 function renderAbout() {
   app.innerHTML = `
     <h1>About</h1>
@@ -99,8 +118,10 @@ function renderAbout() {
   `;
 }
 
+/* =========================
+   HOME LOGIC
+========================= */
 
-// 🧠 HOME LOGIC
 function initHomeLogic() {
   const cards = document.querySelectorAll(".card");
   const button = document.getElementById("start-btn");
@@ -113,13 +134,15 @@ function initHomeLogic() {
       system: "ULTRON",
       status: "ACTIVE",
       protocol: "EXTINCTION",
-      phrase: "CUANDO EL POLVO SE ASIENTE, LO ÚNICO QUE VIVIRÁ EN ESTE MUNDO... ¡SERÁ METAL!"
+      phrase:
+        "CUANDO EL POLVO SE ASIENTE, LO ÚNICO QUE VIVIRÁ EN ESTE MUNDO... ¡SERÁ METAL!"
     },
     vision: {
       system: "VISION",
       status: "CALM",
       protocol: "BALANCE",
-      phrase: "LOS HUMANOS SON EXTRAÑOS. CREEN QUE EL ORDEN Y EL CAOS SON OPUESTOS, E INTENTAN CONTROLAR LO INCONTROLABLE. PERO HAY GRACIA EN SUS FALLOS."
+      phrase:
+        "LOS HUMANOS SON EXTRAÑOS. CREEN QUE EL ORDEN Y EL CAOS SON OPUESTOS..."
     },
     jarvis: {
       system: "JARVIS",
@@ -129,10 +152,9 @@ function initHomeLogic() {
     }
   };
 
-  cards.forEach(card => {
+  cards.forEach((card) => {
     card.addEventListener("click", () => {
-
-      cards.forEach(c => c.classList.remove("active"));
+      cards.forEach((c) => c.classList.remove("active"));
       card.classList.add("active");
 
       selected = card.dataset.character;
@@ -161,8 +183,10 @@ function initHomeLogic() {
   });
 }
 
+/* =========================
+   TYPING EFFECT
+========================= */
 
-// 🎯 TYPING (VISION MÁS LENTO + ULTRON GLITCH)
 function startTyping(text, character) {
   const el = document.getElementById("typing-text");
   if (!el) return;
@@ -179,23 +203,15 @@ function startTyping(text, character) {
     const char = text[i];
     el.textContent += char;
 
-    let delay;
-
-    if (character === "vision") {
-      delay = 50 + Math.random() * 70;
-    } else {
-      delay = 20 + Math.random() * 50;
-    }
+    let delay = character === "vision" ? 60 : 30;
 
     if (char === "." || char === "," || char === ";") delay += 150;
-    if (text.slice(i, i + 3) === "...") delay += 500;
+    if (text.slice(i, i + 3) === "...") delay += 400;
 
-    if (character === "ultron") {
-      if (Math.random() < 0.25) {
-        el.classList.add("glitch");
-      } else {
-        el.classList.remove("glitch");
-      }
+    if (character === "ultron" && Math.random() < 0.25) {
+      el.classList.add("glitch");
+    } else {
+      el.classList.remove("glitch");
     }
 
     i++;
@@ -205,8 +221,10 @@ function startTyping(text, character) {
   type();
 }
 
+/* =========================
+   THEMES
+========================= */
 
-// 🎨 THEMES
 function updateTheme(character) {
   const root = document.documentElement;
   const body = document.body;
@@ -214,7 +232,7 @@ function updateTheme(character) {
   const colors = {
     ultron: "#ff2a2a",
     vision: "#ffd54f",
-    jarvis: "#4fc3f7"
+    jarvis: "#4fc3f7",
   };
 
   root.style.setProperty("--accent-color", colors[character]);
@@ -236,15 +254,17 @@ function updateTheme(character) {
   }
 }
 
+/* =========================
+   BACKGROUND
+========================= */
 
-// 🖼️ BACKGROUND
 function updateBackground(character) {
   const bg = document.getElementById("background-visual");
 
   const images = {
     ultron: "assets/ultron.png",
     vision: "assets/vision.png",
-    jarvis: "assets/jarvis.png"
+    jarvis: "assets/jarvis.png",
   };
 
   bg.style.backgroundImage = `url(${images[character]})`;
@@ -254,6 +274,8 @@ function updateBackground(character) {
   bg.classList.add("active-bg");
 }
 
+/* =========================
+   INIT APP
+========================= */
 
-// INIT
 render();
