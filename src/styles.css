@@ -196,3 +196,7 @@ body {
     flex: 1;
   }
 }
+
+.terminal {
+    text-transform: uppercase;
+}
