@@ -227,3 +227,74 @@ body {
     text-shadow: 0 0 2px var(--accent-color);
   }
 }
+
+/* GLITCH GLOBAL ULTRON */
+body.ultron-mode {
+  animation: screenGlitch 2.8s infinite;
+}
+
+body.ultron-mode::before,
+body.ultron-mode::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+}
+
+body.ultron-mode::before {
+  background: rgba(255, 0, 0, 0.035);
+  animation: scanShift 0.25s infinite;
+}
+
+body.ultron-mode::after {
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 2px,
+      rgba(255, 0, 0, 0.04) 3px
+    );
+  animation: scanlines 5s linear infinite;
+}
+
+@keyframes screenGlitch {
+  0%, 92%, 100% {
+    transform: translate(0);
+    filter: none;
+  }
+
+  93% {
+    transform: translate(-2px, 1px);
+    filter: hue-rotate(-10deg);
+  }
+
+  95% {
+    transform: translate(2px, -1px);
+    filter: contrast(1.25);
+  }
+
+  97% {
+    transform: translate(-1px, 0);
+  }
+}
+
+@keyframes scanShift {
+  0%, 100% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(2px);
+  }
+}
+
+@keyframes scanlines {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: 0 100px;
+  }
+}

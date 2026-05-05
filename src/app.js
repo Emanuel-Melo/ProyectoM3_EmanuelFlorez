@@ -89,34 +89,32 @@ function renderAbout() {
 }
 
 
-// 🧠 Lógica del Home
+// 🧠 HOME LOGIC
 function initHomeLogic() {
   const cards = document.querySelectorAll(".card");
   const button = document.getElementById("start-btn");
   const terminal = document.getElementById("terminal");
-  const typingText = document.getElementById("typing-text");
 
   let selected = null;
-  let typingInterval = null;
 
   const characterData = {
     ultron: {
       system: "ULTRON",
       status: "ACTIVE",
       protocol: "EXTINCTION",
-      phrase: "Cuando el polvo se asiente, lo único que vivirá en este mundo... ¡será metal!"
+      phrase: "CUANDO EL POLVO SE ASIENTE, LO ÚNICO QUE VIVIRÁ EN ESTE MUNDO... ¡SERÁ METAL!"
     },
     vision: {
       system: "VISION",
       status: "CALM",
       protocol: "BALANCE",
-      phrase: "Los humanos son extraños. Creen que el orden y el caos son opuestos, e intentan controlar lo incontrolable. Pero hay gracia en sus fallos."
+      phrase: "LOS HUMANOS SON EXTRAÑOS. CREEN QUE EL ORDEN Y EL CAOS SON OPUESTOS, E INTENTAN CONTROLAR LO INCONTROLABLE. PERO HAY GRACIA EN SUS FALLOS."
     },
     jarvis: {
       system: "JARVIS",
       status: "ONLINE",
       protocol: "ASSISTANCE",
-      phrase: "A su servicio, señor Stark."
+      phrase: "A SU SERVICIO, SEÑOR STARK."
     }
   };
 
@@ -136,50 +134,15 @@ function initHomeLogic() {
         <p>> SYSTEM: ${data.system}</p>
         <p>> STATUS: ${data.status}</p>
         <p>> PROTOCOL: ${data.protocol}</p>
-        <p id="typing-line">> <span id="typing-text"></span><span class="cursor"></span></p>
+        <p>> <span id="typing-text"></span><span class="cursor"></span></p>
       `;
 
       updateTheme(selected);
       updateBackground(selected);
 
-      // 🔥 iniciar typing
-      startTyping(data.phrase);
+      startTyping(data.phrase, selected);
     });
   });
-
-  function startTyping(text) {
-  const typingText = document.getElementById("typing-text");
-
-  if (!typingText) return;
-
-  typingText.textContent = "";
-
-  let index = 0;
-
-  function type() {
-    if (index >= text.length) return;
-
-    const char = text[index];
-    typingText.textContent += char;
-
-    let delay = 25 + Math.random() * 40; // 🎯 velocidad base variable
-
-    // ⏱️ pausas especiales
-    if (char === "." || char === "," || char === ";") {
-      delay += 200;
-    }
-
-    // pausa más larga para "..."
-    if (text.slice(index, index + 3) === "...") {
-      delay += 1000;
-    }
-
-    index++;
-    setTimeout(type, delay);
-  }
-
-  type();
-}
 
   button.addEventListener("click", () => {
     if (!selected) return;
@@ -188,7 +151,47 @@ function initHomeLogic() {
 }
 
 
-// 🎨 Tema dinámico
+// 🎯 TYPING CON GLITCH ULTRON
+function startTyping(text, character) {
+  const el = document.getElementById("typing-text");
+
+  if (!el) return;
+
+  el.textContent = "";
+  let i = 0;
+
+  function type() {
+    if (i >= text.length) {
+      el.classList.remove("glitch");
+      return;
+    }
+
+    const char = text[i];
+    el.textContent += char;
+
+    let delay = 20 + Math.random() * 50;
+
+    // pausas
+    if (char === "." || char === "," || char === ";") delay += 120;
+    if (text.slice(i, i + 3) === "...") delay += 400;
+
+    // ⚡ glitch SOLO ULTRON (más visible y estable)
+    if (character === "ultron") {
+      if (Math.random() < 0.25) {
+        el.classList.add("glitch");
+      } else {
+        el.classList.remove("glitch");
+      }
+    }
+
+    i++;
+    setTimeout(type, delay);
+  }
+
+  type();
+}
+
+
 function updateTheme(character) {
   const root = document.documentElement;
 
@@ -199,10 +202,16 @@ function updateTheme(character) {
   };
 
   root.style.setProperty("--accent-color", colors[character]);
+
+  document.body.classList.remove("ultron-mode");
+
+  if (character === "ultron") {
+    document.body.classList.add("ultron-mode");
+  }
 }
 
 
-// 🖼️ Fondo dinámico
+// 🖼️ BACKGROUND
 function updateBackground(character) {
   const bg = document.getElementById("background-visual");
 
@@ -220,5 +229,5 @@ function updateBackground(character) {
 }
 
 
-// 🚀 init
+// INIT
 render();
