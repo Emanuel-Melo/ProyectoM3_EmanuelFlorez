@@ -41,26 +41,16 @@ function renderHome() {
         <p>> SYSTEM: ---</p>
         <p>> STATUS: WAITING SELECTION</p>
         <p>> PROTOCOL: ---</p>
-        <p id="typing-line">> <span id="typing-text"></span><span class="cursor"></span></p>
+        <p>> <span id="typing-text"></span><span class="cursor"></span></p>
       </div>
 
       <div class="characters">
-        <div class="card" data-character="ultron">
-          <h2>Ultron</h2>
-        </div>
-
-        <div class="card" data-character="vision">
-          <h2>Vision</h2>
-        </div>
-
-        <div class="card" data-character="jarvis">
-          <h2>Jarvis</h2>
-        </div>
+        <div class="card" data-character="ultron"><h2>Ultron</h2></div>
+        <div class="card" data-character="vision"><h2>Vision</h2></div>
+        <div class="card" data-character="jarvis"><h2>Jarvis</h2></div>
       </div>
 
-      <button id="start-btn" disabled>
-        Iniciar Chat
-      </button>
+      <button id="start-btn" disabled>Iniciar Chat</button>
 
     </section>
   `;
@@ -151,10 +141,9 @@ function initHomeLogic() {
 }
 
 
-// 🎯 TYPING CON GLITCH ULTRON
+// 🎯 TYPING (VISION MÁS LENTO)
 function startTyping(text, character) {
   const el = document.getElementById("typing-text");
-
   if (!el) return;
 
   el.textContent = "";
@@ -169,13 +158,20 @@ function startTyping(text, character) {
     const char = text[i];
     el.textContent += char;
 
-    let delay = 20 + Math.random() * 50;
+    let delay;
+
+    // ⚖️ velocidad por personaje
+    if (character === "vision") {
+      delay = 50 + Math.random() * 70;
+    } else {
+      delay = 20 + Math.random() * 50;
+    }
 
     // pausas
-    if (char === "." || char === "," || char === ";") delay += 120;
-    if (text.slice(i, i + 3) === "...") delay += 400;
+    if (char === "." || char === "," || char === ";") delay += 150;
+    if (text.slice(i, i + 3) === "...") delay += 500;
 
-    // ⚡ glitch SOLO ULTRON (más visible y estable)
+    // ⚡ glitch solo ultron
     if (character === "ultron") {
       if (Math.random() < 0.25) {
         el.classList.add("glitch");
@@ -192,21 +188,31 @@ function startTyping(text, character) {
 }
 
 
+// 🎨 THEMES
 function updateTheme(character) {
   const root = document.documentElement;
+  const body = document.body;
 
   const colors = {
     ultron: "#ff2a2a",
-    vision: "#ffd700",
+    vision: "#ffd54f",
     jarvis: "#4fc3f7"
   };
 
   root.style.setProperty("--accent-color", colors[character]);
 
-  document.body.classList.remove("ultron-mode");
+  // reset
+  body.classList.remove("ultron-mode", "vision-mode");
 
   if (character === "ultron") {
-    document.body.classList.add("ultron-mode");
+    body.classList.add("ultron-mode");
+
+    body.classList.add("screen-distortion");
+    setTimeout(() => body.classList.remove("screen-distortion"), 400);
+  }
+
+  if (character === "vision") {
+    body.classList.add("vision-mode");
   }
 }
 
