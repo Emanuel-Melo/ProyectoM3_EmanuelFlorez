@@ -200,3 +200,30 @@ body {
 .terminal {
     text-transform: uppercase;
 }
+
+/* ⚡ GLITCH ULTRON */
+.glitch {
+  position: relative;
+  animation: glitchFlicker 0.3s infinite;
+}
+
+@keyframes glitchFlicker {
+  0% {
+    text-shadow: 0 0 2px var(--accent-color);
+  }
+  20% {
+    text-shadow: -2px 0 red, 2px 0 cyan;
+  }
+  40% {
+    text-shadow: 0 0 4px var(--accent-color);
+  }
+  60% {
+    text-shadow: -1px 0 red, 1px 0 cyan;
+  }
+  80% {
+    text-shadow: 0 0 3px var(--accent-color);
+  }
+  100% {
+    text-shadow: 0 0 2px var(--accent-color);
+  }
+}

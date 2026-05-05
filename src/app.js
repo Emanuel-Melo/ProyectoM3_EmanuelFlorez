@@ -148,22 +148,38 @@ function initHomeLogic() {
   });
 
   function startTyping(text) {
-    const typingText = document.getElementById("typing-text");
+  const typingText = document.getElementById("typing-text");
 
-    if (typingInterval) clearInterval(typingInterval);
+  if (!typingText) return;
 
-    typingText.textContent = "";
-    let index = 0;
+  typingText.textContent = "";
 
-    typingInterval = setInterval(() => {
-      typingText.textContent += text[index];
-      index++;
+  let index = 0;
 
-      if (index >= text.length) {
-        clearInterval(typingInterval);
-      }
-    }, 35); // velocidad typing
+  function type() {
+    if (index >= text.length) return;
+
+    const char = text[index];
+    typingText.textContent += char;
+
+    let delay = 25 + Math.random() * 40; // 🎯 velocidad base variable
+
+    // ⏱️ pausas especiales
+    if (char === "." || char === "," || char === ";") {
+      delay += 200;
+    }
+
+    // pausa más larga para "..."
+    if (text.slice(index, index + 3) === "...") {
+      delay += 1000;
+    }
+
+    index++;
+    setTimeout(type, delay);
   }
+
+  type();
+}
 
   button.addEventListener("click", () => {
     if (!selected) return;
