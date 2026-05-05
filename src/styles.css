@@ -1,70 +1,150 @@
 :root {
-    --accent-color: white;
+  --accent-color: #ffffff;
+}
+
+/* RESET */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-    margin: 0;
-    background: black;
-    color: white;
-    font-family: monospace;
+  background: black;
+  color: white;
+  font-family: "Courier New", monospace;
+  min-height: 100vh;
 }
 
+/* NAV */
 .nav {
-    display: flex;
-    gap: 10px;
-    padding: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 15px;
+  border-bottom: 1px solid #222;
 }
 
 .nav a {
-    color: var(--accent-color);
-    text-decoration: none;
+  text-decoration: none;
+  color: var(--accent-color);
+  font-weight: bold;
+  transition: 0.3s;
 }
 
+.nav a:hover {
+  text-shadow: 0 0 8px var(--accent-color);
+}
+
+/* HOME */
 .home {
-    padding: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
 
+/* TERMINAL */
 .terminal {
-    border: 1px solid var(--accent-color);
-    padding: 10px;
-    margin-bottom: 20px;
+  border: 1px solid var(--accent-color);
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.7);
+  box-shadow: 0 0 10px var(--accent-color);
+  line-height: 1.6;
 }
 
+/* CARDS */
 .characters {
-    display: flex;
-    gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .card {
-    border: 1px solid white;
-    padding: 20px;
-    cursor: pointer;
+  border: 1px solid #333;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  background: #111;
 }
 
+/* Hover efecto */
+.card:hover {
+  transform: scale(1.05);
+  border-color: var(--accent-color);
+  box-shadow: 0 0 15px var(--accent-color);
+}
+
+/* Selección */
 .card.active {
-    border-color: var(--accent-color);
-    color: var(--accent-color);
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+  box-shadow: 0 0 20px var(--accent-color);
 }
 
+/* BOTÓN */
 #start-btn {
-    margin-top: 20px;
-    padding: 10px;
-    background: var(--accent-color);
-    color: black;
-    border: none;
-    cursor: pointer;
+  padding: 15px;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  background: var(--accent-color);
+  color: black;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#start-btn:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px var(--accent-color);
 }
 
 #start-btn:disabled {
-    background: gray;
-    cursor: not-allowed;
+  background: #444;
+  color: #999;
+  cursor: not-allowed;
 }
 
+/* FONDO */
 #background-visual {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.08;
+}
+
+/* 📱 TABLET */
+@media (min-width: 768px) {
+  .characters {
+    flex-direction: row;
+  }
+
+  .card {
+    flex: 1;
+  }
+}
+
+/* 💻 DESKTOP */
+@media (min-width: 1024px) {
+  .home {
+    max-width: 900px;
+    margin: auto;
+  }
+
+  .terminal {
+    font-size: 18px;
+  }
+
+  .card {
+    padding: 30px;
+    font-size: 18px;
+  }
 }

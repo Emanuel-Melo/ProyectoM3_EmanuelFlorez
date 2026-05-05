@@ -1,0 +1,14 @@
+{
+    "name": "ai-character-chat",
+    "version": "1.0.0",
+    "description": "SPA para chatear con personajes usando AI",
+    "scripts": {
+        "dev": "vercel dev",
+        "test": "vitest"
+    },
+    "author": "Emanuel Florez",
+    "license": "MIT",
+    "devDependencies": {
+        "vitest": "^1.0.0"
+    }
+}
