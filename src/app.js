@@ -1,169 +1,184 @@
 const app = document.getElementById("app");
 
 const routes = {
-    "/home": renderHome,
-    "/chat": renderChat,
-    "/about": renderAbout,
+  "/home": renderHome,
+  "/chat": renderChat,
+  "/about": renderAbout,
 };
 
 function navigate(path) {
-    window.history.pushState({}, "", path);
-    render();
+  window.history.pushState({}, "", path);
+  render();
 }
 
 function render() {
-    const path = window.location.pathname;
-    const view = routes[path] || renderHome;
+  const path = window.location.pathname.includes("index.html")
+    ? "/home"
+    : window.location.pathname;
 
-    app.innerHTML = "";
-    view();
+  const view = routes[path] || renderHome;
+
+  app.innerHTML = "";
+  view();
 }
 
 window.addEventListener("popstate", render);
 
 document.addEventListener("click", (e) => {
-    if (e.target.matches("[data-link]")) {
-        e.preventDefault();
-        navigate(e.target.getAttribute("href"));
-    }
+  if (e.target.matches("[data-link]")) {
+    e.preventDefault();
+    navigate(e.target.getAttribute("href"));
+  }
 });
 
+
+// 🏠 HOME
 function renderHome() {
-    app.innerHTML = `
-        <section class="home">
+  app.innerHTML = `
+    <section class="home">
 
-        <div class="terminal" id="terminal">
-            <p>> SYSTEM: ---</p>
-            <p>> STATUS: WAITING SELECTION</p>
-            <p>> PROTOCOL: ---</p>
+      <div class="terminal" id="terminal">
+        <p>> SYSTEM: ---</p>
+        <p>> STATUS: WAITING SELECTION</p>
+        <p>> PROTOCOL: ---</p>
+      </div>
+
+      <div class="characters">
+        <div class="card" data-character="ultron">
+          <h2>Ultron</h2>
         </div>
 
-        <div class="characters">
-            <div class="card" data-character="ultron">
-                <h2>Ultron</h2>
-            </div>
-
-            <div class="card" data-character="vision">
-                <h2>Vision</h2>
-            </div>
-
-            <div class="card" data-character="jarvis">
-                <h2>Jarvis</h2>
-            </div>
+        <div class="card" data-character="vision">
+          <h2>Vision</h2>
         </div>
 
-        <button id="start-btn" disabled>
-            Iniciar Chat
-        </button>
+        <div class="card" data-character="jarvis">
+          <h2>Jarvis</h2>
+        </div>
+      </div>
 
-        </section>
-    `;
+      <button id="start-btn" disabled>
+        Iniciar Chat
+      </button>
 
-    initHomeLogic();
+    </section>
+  `;
+
+  initHomeLogic();
 }
 
+
+// 💬 CHAT
 function renderChat() {
-    const character = localStorage.getItem("character");
+  const character = localStorage.getItem("character");
 
-    app.innerHTML = `
-        <h1>Chat</h1>
-        <p>Personaje seleccionado: ${character || "Ninguno"}</p>
-    `;
+  app.innerHTML = `
+    <h1>Chat</h1>
+    <p>Personaje seleccionado: ${character || "Ninguno"}</p>
+  `;
 }
 
+
+// ℹ️ ABOUT
 function renderAbout() {
-    app.innerHTML = `
-        <h1>About</h1>
-        <p>Proyecto SPA con AI</p>
-    `;
+  app.innerHTML = `
+    <h1>About</h1>
+    <p>Proyecto SPA con AI</p>
+  `;
 }
 
+
+// 🧠 Lógica del Home
 function initHomeLogic() {
-    const cards = document.querySelectorAll(".card");
-    const button = document.getElementById("start-btn");
-    const terminal = document.getElementById("terminal");
+  const cards = document.querySelectorAll(".card");
+  const button = document.getElementById("start-btn");
+  const terminal = document.getElementById("terminal");
 
-    let selected = null;
+  let selected = null;
 
-    const characterData = {
+  const characterData = {
     ultron: {
-            system: "ULTRON",
-            status: "ACTIVE",
-            protocol: "EXTINCTION"
-        },
+      system: "ULTRON",
+      status: "ACTIVE",
+      protocol: "EXTINCTION"
+    },
     vision: {
-            system: "VISION",
-            status: "CALM",
-            protocol: "BALANCE"
-        },
+      system: "VISION",
+      status: "CALM",
+      protocol: "BALANCE"
+    },
     jarvis: {
-            system: "JARVIS",
-            status: "ONLINE",
-            protocol: "ASSISTANCE"
-        }
-    };
+      system: "JARVIS",
+      status: "ONLINE",
+      protocol: "ASSISTANCE"
+    }
+  };
 
-    cards.forEach(card => {
-        card.addEventListener("click", () => {
+  cards.forEach(card => {
+    card.addEventListener("click", () => {
 
-        cards.forEach(c => c.classList.remove("active"));
+      cards.forEach(c => c.classList.remove("active"));
 
-        card.classList.add("active");
+      card.classList.add("active");
 
-        selected = card.dataset.character;
+      selected = card.dataset.character;
 
-        localStorage.setItem("character", selected);
+      localStorage.setItem("character", selected);
 
-        button.disabled = false;
+      button.disabled = false;
 
-        const data = characterData[selected];
+      const data = characterData[selected];
 
-        terminal.innerHTML = `
-            <p>> SYSTEM: ${data.system}</p>
-            <p>> STATUS: ${data.status}</p>
-            <p>> PROTOCOL: ${data.protocol}</p>
-        `;
+      terminal.innerHTML = `
+        <p>> SYSTEM: ${data.system}</p>
+        <p>> STATUS: ${data.status}</p>
+        <p>> PROTOCOL: ${data.protocol}</p>
+      `;
 
-            updateTheme(selected);
-            updateBackground(selected);
-        });
+      updateTheme(selected);
+      updateBackground(selected);
     });
+  });
 
-    button.addEventListener("click", () => {
-        if (!selected) return;
-        navigate("/chat");
-    });
+  button.addEventListener("click", () => {
+    if (!selected) return;
+    navigate("/chat");
+  });
 }
 
 
+// 🎨 Tema dinámico (AZUL MÁS CLARO)
 function updateTheme(character) {
-     const root = document.documentElement;
+  const root = document.documentElement;
 
-    const colors = {
-        ultron: "red",
-        vision: "yellow",
-        jarvis: "blue"
-    };
+  const colors = {
+    ultron: "#ff2a2a",
+    vision: "#ffd700",
+    jarvis: "#4fc3f7"  // 🔵 azul claro pro
+  };
 
-    root.style.setProperty("--accent-color", colors[character]);
+  root.style.setProperty("--accent-color", colors[character]);
 }
 
 
+// 🖼️ Fondo dinámico + efecto encendido
 function updateBackground(character) {
-    const bg = document.getElementById("background-visual");
+  const bg = document.getElementById("background-visual");
 
-    const images = {
-        ultron: "assets/ultron.png",
-        vision: "assets/vision.png",
-        jarvis: "assets/jarvis.png"
-    };
+  const images = {
+    ultron: "assets/ultron.png",
+    vision: "assets/vision.png",
+    jarvis: "assets/jarvis.png"
+  };
 
-    bg.style.backgroundImage = `url(${images[character]})`;
-    bg.style.backgroundSize = "contain";
-    bg.style.backgroundRepeat = "no-repeat";
-    bg.style.backgroundPosition = "center";
-    bg.style.opacity = "0.1";
+  bg.style.backgroundImage = `url(${images[character]})`;
+
+  // Reset animación
+  bg.classList.remove("active-bg");
+  void bg.offsetWidth; // trick para reiniciar animación
+  bg.classList.add("active-bg");
 }
 
 
+// Render inicial
 render();
