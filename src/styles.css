@@ -256,29 +256,9 @@ body.vision-mode::before {
 }
 
 /* =========================
-   💬 CHAT TERMINAL MODE
+   💬 CHAT TERMINAL MODE v2
 ========================= */
 
-#chat-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  padding: 20px;
-  font-family: "Fira Code", monospace;
-  background: black;
-  color: var(--accent-color);
-}
-
-/* HEADER tipo SYSTEM */
-#chat-header {
-  font-weight: 700;
-  letter-spacing: 2px;
-  margin-bottom: 15px;
-  opacity: 0.9;
-  text-transform: uppercase;
-}
-
-/* AREA DE MENSAJES = TERMINAL LOG */
 #chat-messages {
   flex: 1;
   overflow-y: auto;
@@ -288,84 +268,54 @@ body.vision-mode::before {
 
   font-size: 14px;
   line-height: 1.6;
-
-  padding-right: 10px;
 }
 
-/* MENSAJES COMO LÍNEAS DE LOG */
+/* LÍNEA GENERAL */
 .message {
-  display: block;
-  width: 100%;
   white-space: pre-wrap;
 }
 
-/* USUARIO */
+/* USER = blanco puro */
 .message.user {
   color: white;
 }
 
-.message.user::before {
-  content: "> USER: ";
-  color: #888;
-}
-
-/* BOT */
+/* BOT = color dinámico */
 .message.bot {
   color: var(--accent-color);
 }
 
+/* PROMPTS (lo importante aquí) */
+.message.user::before {
+  content: "> USER: ";
+  color: #777;
+}
+
 .message.bot::before {
-  content: "> SYSTEM: ";
-  opacity: 0.8;
+  content: attr(data-prefix);
+  color: var(--accent-color);
+  opacity: 0.9;
 }
 
-/* INPUT TERMINAL STYLE */
-#chat-form {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-  border-top: 1px solid #222;
-  padding-top: 10px;
-}
-
+/* INPUT estilo terminal */
 #chat-input {
   flex: 1;
   background: black;
   border: none;
   outline: none;
-  color: var(--accent-color);
+  color: white;
   font-family: "Fira Code", monospace;
   font-size: 14px;
 }
 
-/* CURSOR INPUT STYLE */
+/* cursor visual */
 #chat-input::placeholder {
   color: #444;
 }
 
-/* BOTÓN COMO COMANDO */
-#chat-form button {
-  background: transparent;
-  border: 1px solid var(--accent-color);
-  color: var(--accent-color);
-  padding: 6px 12px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-#chat-form button:hover {
-  background: var(--accent-color);
-  color: black;
-}
-
-/* SCROLL TIPO TERMINAL */
-#chat-messages::-webkit-scrollbar {
-  width: 6px;
-}
-
-#chat-messages::-webkit-scrollbar-thumb {
-  background: var(--accent-color);
-  opacity: 0.4;
+/* cursor parpadeante opcional */
+#chat-input {
+  caret-color: var(--accent-color);
 }
 
 /* =========================
@@ -380,4 +330,19 @@ body.vision-mode::before {
   .card {
     flex: 1;
   }
+}
+
+/* indicador terminal */
+#chat-form {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  border-top: 1px solid #222;
+  padding-top: 10px;
+}
+
+/* efecto “ready to type” */
+#chat-input:focus {
+  outline: none;
+  box-shadow: 0 0 8px rgba(255,255,255,0.1);
 }

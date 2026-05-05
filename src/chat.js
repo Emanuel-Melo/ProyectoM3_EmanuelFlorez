@@ -64,8 +64,24 @@ function renderMessage(message) {
   const bubble = document.createElement("div");
   bubble.className = `message ${message.role}`;
 
+  // 🔥 PROMPT DINÁMICO
+  if (message.role === "bot") {
+    const character = state.character;
+
+    const prefixMap = {
+      ultron: "> ULTRON: ",
+      vision: "> VISION: ",
+      jarvis: "> JARVIS: "
+    };
+
+    bubble.setAttribute(
+      "data-prefix",
+      prefixMap[character] || "> SYSTEM: "
+    );
+  }
+
   const content = document.createElement("div");
-  content.className = "bubble";
+  content.className = "text";
   content.textContent = message.text;
 
   bubble.appendChild(content);
