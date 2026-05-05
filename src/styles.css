@@ -59,7 +59,7 @@ body {
   height: 18px;
   background: var(--accent-color);
   position: relative;
-  top: 10px; /* 🔻 baja el cursor */
+  top: 5px; /* 🔻 baja el cursor */
   animation: blink 1.6s infinite; /* 🐢 más lento */
 }
 
