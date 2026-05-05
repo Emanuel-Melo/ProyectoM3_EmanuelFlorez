@@ -41,6 +41,7 @@ function renderHome() {
         <p>> SYSTEM: ---</p>
         <p>> STATUS: WAITING SELECTION</p>
         <p>> PROTOCOL: ---</p>
+        <p>> <span class="cursor"></span></p>
       </div>
 
       <div class="characters">
@@ -117,22 +118,28 @@ function initHomeLogic() {
   cards.forEach(card => {
     card.addEventListener("click", () => {
 
+      // Reset selección
       cards.forEach(c => c.classList.remove("active"));
 
+      // Activar tarjeta
       card.classList.add("active");
 
       selected = card.dataset.character;
 
+      // Guardar
       localStorage.setItem("character", selected);
 
+      // Activar botón
       button.disabled = false;
 
+      // Actualizar terminal con cursor
       const data = characterData[selected];
 
       terminal.innerHTML = `
         <p>> SYSTEM: ${data.system}</p>
         <p>> STATUS: ${data.status}</p>
         <p>> PROTOCOL: ${data.protocol}</p>
+        <p>> <span class="cursor"></span></p>
       `;
 
       updateTheme(selected);
@@ -140,6 +147,7 @@ function initHomeLogic() {
     });
   });
 
+  // Navegar
   button.addEventListener("click", () => {
     if (!selected) return;
     navigate("/chat");
@@ -147,21 +155,21 @@ function initHomeLogic() {
 }
 
 
-// 🎨 Tema dinámico (AZUL MÁS CLARO)
+// 🎨 Tema dinámico
 function updateTheme(character) {
   const root = document.documentElement;
 
   const colors = {
     ultron: "#ff2a2a",
     vision: "#ffd700",
-    jarvis: "#4fc3f7"  // 🔵 azul claro pro
+    jarvis: "#4fc3f7"
   };
 
   root.style.setProperty("--accent-color", colors[character]);
 }
 
 
-// 🖼️ Fondo dinámico + efecto encendido
+// 🖼️ Fondo dinámico con efecto encendido progresivo
 function updateBackground(character) {
   const bg = document.getElementById("background-visual");
 
@@ -173,12 +181,12 @@ function updateBackground(character) {
 
   bg.style.backgroundImage = `url(${images[character]})`;
 
-  // Reset animación
+  // Reiniciar animación
   bg.classList.remove("active-bg");
-  void bg.offsetWidth; // trick para reiniciar animación
+  void bg.offsetWidth;
   bg.classList.add("active-bg");
 }
 
 
-// Render inicial
+// 🚀 Render inicial
 render();

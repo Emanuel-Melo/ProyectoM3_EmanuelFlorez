@@ -12,23 +12,22 @@
 body {
   background: black;
   color: white;
-  font-family: "Courier New", monospace;
+  font-family: "Fira Code", monospace;
+  font-weight: 600;
   min-height: 100vh;
 }
 
 /* NAV */
 .nav {
   display: flex;
-  justify-content: center;
   gap: 20px;
-  padding: 15px;
+  padding: 15px 30px;
   border-bottom: 1px solid #222;
 }
 
 .nav a {
   text-decoration: none;
   color: var(--accent-color);
-  font-weight: bold;
   transition: 0.3s;
 }
 
@@ -38,19 +37,39 @@ body {
 
 /* HOME */
 .home {
-  padding: 20px;
+  padding: 30px;
+  max-width: 700px;
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 25px;
 }
 
 /* TERMINAL */
 .terminal {
-  border: 1px solid var(--accent-color);
-  padding: 15px;
-  background: rgba(0, 0, 0, 0.7);
-  box-shadow: 0 0 10px var(--accent-color);
-  line-height: 1.6;
+  color: var(--accent-color);
+  line-height: 1.8;
+  font-weight: 700;
+}
+
+/* ⌨️ CURSOR MEJORADO */
+.cursor {
+  display: inline-block;
+  margin-left: 5px;
+  width: 10px;
+  height: 18px;
+  background: var(--accent-color);
+  position: relative;
+  top: 10px; /* 🔻 baja el cursor */
+  animation: blink 1.6s infinite; /* 🐢 más lento */
+}
+
+@keyframes blink {
+  0%, 60%, 100% {
+    opacity: 1;
+  }
+  30%, 80% {
+    opacity: 0;
+  }
 }
 
 /* CARDS */
@@ -65,7 +84,6 @@ body {
   padding: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
-  text-align: center;
   background: #111;
 }
 
@@ -85,7 +103,6 @@ body {
 #start-btn {
   padding: 15px;
   border: none;
-  font-size: 16px;
   font-weight: bold;
   background: var(--accent-color);
   color: black;
@@ -104,7 +121,7 @@ body {
   cursor: not-allowed;
 }
 
-/* FONDO BASE */
+/* FONDO */
 #background-visual {
   position: fixed;
   top: 0;
@@ -120,31 +137,56 @@ body {
   opacity: 0;
 }
 
-/* ✨ EFECTO ENCENDIDO */
+/* ⚡ ENCENDIDO INICIAL + LUZ CONSTANTE */
 .active-bg {
-  animation: powerOn 0.6s ease forwards;
+  animation: powerOn 1.2s ease forwards, glow 3s infinite 1.2s;
 }
 
+/* Encendido progresivo */
 @keyframes powerOn {
   0% {
-    opacity: 0;
-    filter: brightness(0);
+    opacity: 0.02;
+    filter: brightness(0.2);
   }
-  30% {
-    opacity: 0.3;
-    filter: brightness(3);
+  20% {
+    opacity: 0.08;
+    filter: brightness(2);
+  }
+  40% {
+    opacity: 0.15;
+    filter: brightness(1);
   }
   60% {
-    opacity: 0.15;
+    opacity: 0.22;
     filter: brightness(1.5);
   }
+  80% {
+    opacity: 0.3;
+    filter: brightness(1);
+  }
   100% {
-    opacity: 0.25;
+    opacity: 0.35;
     filter: brightness(1);
   }
 }
 
-/* 📱 TABLET */
+/* ✨ Parpadeo suave constante */
+@keyframes glow {
+  0% {
+    opacity: 0.32;
+    filter: brightness(1);
+  }
+  50% {
+    opacity: 0.4;
+    filter: brightness(1.2);
+  }
+  100% {
+    opacity: 0.32;
+    filter: brightness(1);
+  }
+}
+
+/* TABLET */
 @media (min-width: 768px) {
   .characters {
     flex-direction: row;
@@ -152,22 +194,5 @@ body {
 
   .card {
     flex: 1;
-  }
-}
-
-/* 💻 DESKTOP */
-@media (min-width: 1024px) {
-  .home {
-    max-width: 900px;
-    margin: auto;
-  }
-
-  .terminal {
-    font-size: 18px;
-  }
-
-  .card {
-    padding: 30px;
-    font-size: 18px;
   }
 }
