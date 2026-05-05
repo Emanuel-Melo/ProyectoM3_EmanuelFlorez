@@ -1,3 +1,5 @@
+import { initChat } from "./chat.js";
+
 const app = document.getElementById("app");
 
 const routes = {
@@ -64,9 +66,28 @@ function renderChat() {
   const character = localStorage.getItem("character");
 
   app.innerHTML = `
-    <h1>Chat</h1>
-    <p>Personaje seleccionado: ${character || "Ninguno"}</p>
+    <section id="chat-container">
+
+      <div id="chat-header">
+        <span>> ${character ? character.toUpperCase() : "NO SYSTEM"}</span>
+      </div>
+
+      <div id="chat-messages"></div>
+
+      <form id="chat-form">
+        <input
+          id="chat-input"
+          type="text"
+          placeholder="Escribe un mensaje..."
+          autocomplete="off"
+        />
+        <button type="submit">Enviar</button>
+      </form>
+
+    </section>
   `;
+
+  initChat();
 }
 
 
@@ -141,7 +162,7 @@ function initHomeLogic() {
 }
 
 
-// 🎯 TYPING (VISION MÁS LENTO)
+// 🎯 TYPING (VISION MÁS LENTO + ULTRON GLITCH)
 function startTyping(text, character) {
   const el = document.getElementById("typing-text");
   if (!el) return;
@@ -160,18 +181,15 @@ function startTyping(text, character) {
 
     let delay;
 
-    // ⚖️ velocidad por personaje
     if (character === "vision") {
       delay = 50 + Math.random() * 70;
     } else {
       delay = 20 + Math.random() * 50;
     }
 
-    // pausas
     if (char === "." || char === "," || char === ";") delay += 150;
     if (text.slice(i, i + 3) === "...") delay += 500;
 
-    // ⚡ glitch solo ultron
     if (character === "ultron") {
       if (Math.random() < 0.25) {
         el.classList.add("glitch");
@@ -201,18 +219,20 @@ function updateTheme(character) {
 
   root.style.setProperty("--accent-color", colors[character]);
 
-  // reset
-  body.classList.remove("ultron-mode", "vision-mode");
+  body.classList.remove("ultron-mode", "vision-mode", "jarvis-mode");
 
   if (character === "ultron") {
     body.classList.add("ultron-mode");
-
     body.classList.add("screen-distortion");
     setTimeout(() => body.classList.remove("screen-distortion"), 400);
   }
 
   if (character === "vision") {
     body.classList.add("vision-mode");
+  }
+
+  if (character === "jarvis") {
+    body.classList.add("jarvis-mode");
   }
 }
 
