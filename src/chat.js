@@ -24,6 +24,7 @@ export function initChat() {
     isBound = true;
   }
 
+  elements.messages.innerHTML = "";
   renderWelcome();
   elements.input.focus();
 }
@@ -62,17 +63,13 @@ function handleSubmit(e) {
 function simulateConversation(userText) {
   state.isTyping = true;
 
-  pushMessage("user", userText);
-
   typeMessage("user", userText, () => {
     showTypingIndicator();
 
     setTimeout(() => {
       removeTypingIndicator();
 
-      const response = generateMockResponse(userText);
-
-      pushMessage("bot", response);
+      const response = generateMockResponse();
 
       typeMessage("bot", response, () => {
         state.isTyping = false;
@@ -133,8 +130,6 @@ function renderWelcome() {
   };
 
   const text = welcomeMap[state.character] || welcomeMap.jarvis;
-
-  pushMessage("bot", text);
   typeMessage("bot", text);
 }
 
@@ -182,10 +177,6 @@ function showTypingIndicator() {
 function removeTypingIndicator() {
   const el = document.getElementById("typing-indicator");
   if (el) el.remove();
-}
-
-function pushMessage(role, text) {
-  state.messages.push({ role, text, time: Date.now() });
 }
 
 function scrollToBottom() {
