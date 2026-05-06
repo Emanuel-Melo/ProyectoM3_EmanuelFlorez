@@ -8,21 +8,26 @@ export async function fetchJson(url, options = {}) {
       ...options
     });
 
+    const contentType = res.headers.get("content-type") || "";
+
+    let data = null;
+
+    if (contentType.includes("application/json")) {
+      data = await res.json();
+    } else {
+      const text = await res.text();
+      data = safeParseJSON(text) || { message: text };
+    }
+
     if (!res.ok) {
-      let errorMessage = `HTTP Error: ${res.status}`;
-
-      try {
-        const errorData = await res.json();
-        errorMessage = errorData.message || errorMessage;
-      } catch {}
-
+      const errorMessage = data?.message || `HTTP Error: ${res.status}`;
       throw new Error(errorMessage);
     }
 
-    return await res.json();
+    return data;
 
   } catch (error) {
-    throw new Error(error.message || "Network error");
+    throw new Error(error?.message || "Network error");
   }
 }
 
@@ -61,5 +66,6 @@ export function isEmpty(value) {
 }
 
 export function sanitizeInput(text) {
-  return text.replace(/[<>]/g, "");
+  if (typeof text !== "string") return "";
+  return text.replace(/[<>]/g, "").trim();
 }

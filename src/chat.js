@@ -56,7 +56,6 @@ function handleSubmit(e) {
   if (!text || state.isTyping) return;
 
   elements.input.value = "";
-
   simulateConversation(text);
 }
 
@@ -102,13 +101,13 @@ function typeMessage(role, text, callback) {
 
   function type() {
     if (i < text.length) {
-      output += text[i];
+      const char = text[i];
+      output += char;
       content.textContent = output;
 
       i++;
 
       let delay = role === "bot" ? 35 : 20;
-      const char = text[i - 1];
 
       if (char === "." || char === "," || char === ";") delay += 120;
       if (text.slice(i - 1, i + 2) === "...") delay += 300;
@@ -178,15 +177,11 @@ function showLoadingMessage() {
 }
 
 function removeElement(el) {
-  if (el && el.parentNode) el.parentNode.removeChild(el);
+  if (el?.parentNode) el.parentNode.removeChild(el);
 }
 
 function setLoadingState(isLoading) {
-  if (isLoading) {
-    elements.form.classList.add("loading");
-  } else {
-    elements.form.classList.remove("loading");
-  }
+  elements.form.classList.toggle("loading", isLoading);
 }
 
 function scrollToBottom() {

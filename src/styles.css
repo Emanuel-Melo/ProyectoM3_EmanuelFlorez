@@ -289,7 +289,7 @@ body {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.1;
+  opacity: 0;
   animation: jarvisFade 6s ease-in-out infinite, jarvisRotate 10s linear infinite;
 }
 
@@ -305,8 +305,8 @@ body {
 }
 
 @keyframes jarvisFade {
-  0%, 100% { opacity: 0.05; transform: scale(0.8); }
-  50% { opacity: 0.2; transform: scale(1); }
+  0%, 100% { opacity: 0.05; transform: scale(0.85); }
+  50% { opacity: 0.25; transform: scale(1); }
 }
 
 .message.typing {

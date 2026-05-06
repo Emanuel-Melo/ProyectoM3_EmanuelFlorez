@@ -6,10 +6,11 @@ const routes = {
   "/": renderHome,
   "/home": renderHome,
   "/chat": renderChat,
-  "/about": renderAbout,
+  "/about": renderAbout
 };
 
 function navigate(path) {
+  if (window.location.pathname === path) return;
   window.history.pushState({}, "", path);
   render(path);
 }
@@ -26,9 +27,7 @@ function render(path = window.location.pathname) {
   }
 }
 
-window.addEventListener("popstate", () => {
-  render(window.location.pathname);
-});
+window.addEventListener("popstate", () => render());
 
 document.addEventListener("click", (e) => {
   const link = e.target.closest("[data-link]");
@@ -41,7 +40,7 @@ document.addEventListener("click", (e) => {
 function resetGlobalState() {
   const bg = document.getElementById("background-visual");
 
-  document.body.classList.remove("ultron-mode", "vision-mode", "jarvis-mode");
+  document.body.classList.remove("ultron-mode", "vision-mode", "jarvis-mode", "screen-distortion");
   document.documentElement.style.setProperty("--accent-color", "#ffffff");
 
   if (bg) {
@@ -56,7 +55,6 @@ function renderHome() {
 
   app.innerHTML = `
     <section class="home">
-
       <div class="terminal" id="terminal">
         <p>> SYSTEM: ---</p>
         <p>> STATUS: WAITING SELECTION</p>
@@ -71,7 +69,6 @@ function renderHome() {
       </div>
 
       <button id="start-btn" disabled>Iniciar Chat</button>
-
     </section>
   `;
 
@@ -79,19 +76,17 @@ function renderHome() {
 }
 
 function renderChat() {
-  const character = localStorage.getItem("character");
+  const character = localStorage.getItem("character") || "unknown";
 
   app.innerHTML = `
     <section id="chat-container">
-
       <div id="chat-header">
-        > SYSTEM: ${character ? character.toUpperCase() : "UNKNOWN"}
+        > SYSTEM: ${character.toUpperCase()}
       </div>
 
       <div id="chat-messages"></div>
 
       <form id="chat-form" autocomplete="off">
-        
         <span class="prompt">> USER:</span>
 
         <div class="input-wrapper">
@@ -106,7 +101,6 @@ function renderChat() {
 
         <button type="submit">SEND</button>
       </form>
-
     </section>
   `;
 
@@ -155,10 +149,13 @@ function initHomeLogic() {
 
   cards.forEach((card) => {
     card.addEventListener("click", () => {
+      const character = card.dataset.character;
+      if (!character) return;
+
       cards.forEach((c) => c.classList.remove("active"));
       card.classList.add("active");
 
-      selected = card.dataset.character;
+      selected = character;
       localStorage.setItem("character", selected);
       button.disabled = false;
 
@@ -178,8 +175,7 @@ function initHomeLogic() {
   });
 
   button.addEventListener("click", () => {
-    if (!selected) return;
-    navigate("/chat");
+    if (selected) navigate("/chat");
   });
 }
 
@@ -224,16 +220,15 @@ function updateTheme(character) {
   const colors = {
     ultron: "#ff2a2a",
     vision: "#ffd54f",
-    jarvis: "#4fc3f7",
+    jarvis: "#4fc3f7"
   };
 
-  root.style.setProperty("--accent-color", colors[character]);
+  root.style.setProperty("--accent-color", colors[character] || "#ffffff");
 
-  body.classList.remove("ultron-mode", "vision-mode", "jarvis-mode");
+  body.classList.remove("ultron-mode", "vision-mode", "jarvis-mode", "screen-distortion");
 
   if (character === "ultron") {
-    body.classList.add("ultron-mode");
-    body.classList.add("screen-distortion");
+    body.classList.add("ultron-mode", "screen-distortion");
     setTimeout(() => body.classList.remove("screen-distortion"), 400);
   }
 
@@ -248,6 +243,7 @@ function updateTheme(character) {
 
 function updateBackground(character) {
   const bg = document.getElementById("background-visual");
+  if (!bg) return;
 
   const images = {
     ultron: "/src/assets/ultron.png",
@@ -265,10 +261,8 @@ function updateBackground(character) {
     for (let i = 0; i < 5; i++) {
       const orb = document.createElement("div");
       orb.className = "jarvis-orb";
-
       orb.style.top = Math.random() * 70 + "%";
       orb.style.left = Math.random() * 70 + "%";
-
       layer.appendChild(orb);
     }
 
@@ -279,4 +273,5 @@ function updateBackground(character) {
   void bg.offsetWidth;
   bg.classList.add("active-bg");
 }
+
 render();

@@ -1,14 +1,18 @@
 {
-    "name": "ai-character-chat",
-    "version": "1.0.0",
-    "description": "SPA para chatear con personajes usando AI",
-    "scripts": {
-        "dev": "vercel dev",
-        "test": "vitest"
-    },
-    "author": "Emanuel Florez",
-    "license": "MIT",
-    "devDependencies": {
-        "vitest": "^1.0.0"
-    }
+  "name": "ai-character-chat",
+  "version": "1.0.0",
+  "description": "SPA para chatear con personajes usando AI",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo build step not required",
+    "start": "vercel dev",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "author": "Emanuel Florez",
+  "license": "MIT",
+  "devDependencies": {
+    "vitest": "^1.0.0"
+  }
 }

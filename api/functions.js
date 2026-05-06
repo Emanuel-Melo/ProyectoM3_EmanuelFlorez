@@ -4,7 +4,11 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { message } = req.body;
+    const { message } = req.body || {};
+
+    if (!message || typeof message !== "string") {
+      return res.status(400).json({ reply: "Invalid request" });
+    }
 
     const responses = [
       "Procesando solicitud...",
@@ -15,9 +19,9 @@ export default async function handler(req, res) {
 
     const reply = responses[Math.floor(Math.random() * responses.length)];
 
-    res.status(200).json({ reply });
+    return res.status(200).json({ reply });
 
-  } catch (error) {
-    res.status(500).json({ reply: "Error interno del servidor" });
+  } catch {
+    return res.status(500).json({ reply: "Error interno del servidor" });
   }
 }
