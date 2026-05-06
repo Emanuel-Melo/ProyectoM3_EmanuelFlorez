@@ -2,10 +2,6 @@ import { initChat } from "./chat.js";
 
 const app = document.getElementById("app");
 
-/* =========================
-   ROUTER (FIXED)
-========================= */
-
 const routes = {
   "/": renderHome,
   "/home": renderHome,
@@ -21,7 +17,13 @@ function navigate(path) {
 function render(path = window.location.pathname) {
   const route = routes[path] ? path : "/";
   const view = routes[route];
+
+  app.innerHTML = "";
   view();
+
+  if (route === "/" || route === "/home") {
+    resetGlobalState();
+  }
 }
 
 window.addEventListener("popstate", () => {
@@ -36,11 +38,22 @@ document.addEventListener("click", (e) => {
   navigate(link.getAttribute("href"));
 });
 
-/* =========================
-   HOME
-========================= */
+function resetGlobalState() {
+  const bg = document.getElementById("background-visual");
+
+  document.body.classList.remove("ultron-mode", "vision-mode", "jarvis-mode");
+  document.documentElement.style.setProperty("--accent-color", "#ffffff");
+
+  if (bg) {
+    bg.innerHTML = "";
+    bg.style.backgroundImage = "";
+    bg.classList.remove("active-bg");
+  }
+}
 
 function renderHome() {
+  resetGlobalState();
+
   app.innerHTML = `
     <section class="home">
 
@@ -64,10 +77,6 @@ function renderHome() {
 
   initHomeLogic();
 }
-
-/* =========================
-   CHAT
-========================= */
 
 function renderChat() {
   const character = localStorage.getItem("character");
@@ -104,10 +113,6 @@ function renderChat() {
   initChat();
 }
 
-/* =========================
-   ABOUT
-========================= */
-
 function renderAbout() {
   app.innerHTML = `
     <section class="about">
@@ -117,10 +122,6 @@ function renderAbout() {
     </section>
   `;
 }
-
-/* =========================
-   HOME LOGIC
-========================= */
 
 function initHomeLogic() {
   const cards = document.querySelectorAll(".card");
@@ -182,10 +183,6 @@ function initHomeLogic() {
   });
 }
 
-/* =========================
-   TYPING EFFECT
-========================= */
-
 function startTyping(text, character) {
   const el = document.getElementById("typing-text");
   if (!el) return;
@@ -220,10 +217,6 @@ function startTyping(text, character) {
   type();
 }
 
-/* =========================
-   THEMES
-========================= */
-
 function updateTheme(character) {
   const root = document.documentElement;
   const body = document.body;
@@ -253,29 +246,45 @@ function updateTheme(character) {
   }
 }
 
-/* =========================
-   BACKGROUND
-========================= */
-
 function updateBackground(character) {
   const bg = document.getElementById("background-visual");
   if (!bg) return;
 
+  bg.innerHTML = "";
+  bg.style.backgroundImage = "";
+  bg.classList.remove("active-bg");
+
   const images = {
     ultron: "assets/ultron.png",
     vision: "assets/vision.png",
-    jarvis: "assets/jarvis.png",
+    jarvis: "assets/jarvis.png"
   };
 
-  bg.style.backgroundImage = `url(${images[character]})`;
+  if (character === "jarvis") {
+    bg.style.backgroundImage = `url(${images.jarvis})`;
 
-  bg.classList.remove("active-bg");
-  void bg.offsetWidth;
-  bg.classList.add("active-bg");
+    const layer = document.createElement("div");
+    layer.className = "jarvis-layer";
+
+    for (let i = 0; i < 5; i++) {
+      const orb = document.createElement("div");
+      orb.className = "jarvis-orb";
+
+      orb.style.top = Math.random() * 70 + "%";
+      orb.style.left = Math.random() * 70 + "%";
+
+      layer.appendChild(orb);
+    }
+
+    bg.appendChild(layer);
+    return;
+  }
+
+  if (images[character]) {
+    bg.style.backgroundImage = `url(${images[character]})`;
+    void bg.offsetWidth;
+    bg.classList.add("active-bg");
+  }
 }
-
-/* =========================
-   INIT APP
-========================= */
 
 render();

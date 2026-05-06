@@ -5,32 +5,28 @@ let state = {
 };
 
 let elements = {};
-
-/* =========================
-   INIT
-========================= */
+let isBound = false;
 
 export function initChat() {
   cacheDOM();
 
-  if (!elements.form || !elements.input || !elements.messages) {
-    console.error("❌ Chat no inicializado correctamente (DOM missing)");
-    return;
-  }
+  if (!elements.form || !elements.input || !elements.messages) return;
 
   const savedCharacter = localStorage.getItem("character");
   state.character = savedCharacter || "jarvis";
+  state.messages = [];
+  state.isTyping = false;
 
   applyCharacterTheme();
-  bindEvents();
-  renderWelcome();
 
+  if (!isBound) {
+    bindEvents();
+    isBound = true;
+  }
+
+  renderWelcome();
   elements.input.focus();
 }
-
-/* =========================
-   DOM CACHE
-========================= */
 
 function cacheDOM() {
   elements = {
@@ -40,10 +36,6 @@ function cacheDOM() {
     input: document.querySelector("#chat-input")
   };
 }
-
-/* =========================
-   EVENTS
-========================= */
 
 function bindEvents() {
   elements.form.addEventListener("submit", handleSubmit);
@@ -56,15 +48,10 @@ function bindEvents() {
   });
 }
 
-/* =========================
-   SUBMIT
-========================= */
-
 function handleSubmit(e) {
   e.preventDefault();
 
   const text = elements.input.value.trim();
-
   if (!text || state.isTyping) return;
 
   elements.input.value = "";
@@ -72,15 +59,12 @@ function handleSubmit(e) {
   simulateConversation(text);
 }
 
-/* =========================
-   FLOW
-========================= */
-
 function simulateConversation(userText) {
   state.isTyping = true;
 
-  typeMessage("user", userText, () => {
+  pushMessage("user", userText);
 
+  typeMessage("user", userText, () => {
     showTypingIndicator();
 
     setTimeout(() => {
@@ -88,18 +72,15 @@ function simulateConversation(userText) {
 
       const response = generateMockResponse(userText);
 
+      pushMessage("bot", response);
+
       typeMessage("bot", response, () => {
         state.isTyping = false;
       });
 
     }, getTypingDelay());
-
   });
 }
-
-/* =========================
-   TYPE ENGINE
-========================= */
 
 function typeMessage(role, text, callback) {
   const line = document.createElement("div");
@@ -128,7 +109,6 @@ function typeMessage(role, text, callback) {
       i++;
 
       let delay = role === "bot" ? 35 : 20;
-
       const char = text[i - 1];
 
       if (char === "." || char === "," || char === ";") delay += 120;
@@ -136,7 +116,6 @@ function typeMessage(role, text, callback) {
 
       scrollToBottom();
       setTimeout(type, delay);
-
     } else {
       cursor.remove();
       if (callback) callback();
@@ -146,10 +125,6 @@ function typeMessage(role, text, callback) {
   type();
 }
 
-/* =========================
-   WELCOME
-========================= */
-
 function renderWelcome() {
   const welcomeMap = {
     ultron: "SYSTEM ONLINE. YOU ARE NOW CONNECTED TO ULTRON.",
@@ -157,12 +132,11 @@ function renderWelcome() {
     jarvis: "Good day. JARVIS at your service."
   };
 
-  typeMessage("bot", welcomeMap[state.character]);
-}
+  const text = welcomeMap[state.character] || welcomeMap.jarvis;
 
-/* =========================
-   MOCK AI
-========================= */
+  pushMessage("bot", text);
+  typeMessage("bot", text);
+}
 
 function generateMockResponse() {
   const responses = {
@@ -190,18 +164,10 @@ function generateMockResponse() {
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
-/* =========================
-   THEME
-========================= */
-
 function applyCharacterTheme() {
   document.body.classList.remove("ultron-mode", "vision-mode", "jarvis-mode");
   document.body.classList.add(`${state.character}-mode`);
 }
-
-/* =========================
-   TYPING INDICATOR
-========================= */
 
 function showTypingIndicator() {
   const typing = document.createElement("div");
@@ -218,12 +184,14 @@ function removeTypingIndicator() {
   if (el) el.remove();
 }
 
-/* =========================
-   UTILS
-========================= */
+function pushMessage(role, text) {
+  state.messages.push({ role, text, time: Date.now() });
+}
 
 function scrollToBottom() {
-  elements.messages.scrollTop = elements.messages.scrollHeight;
+  requestAnimationFrame(() => {
+    elements.messages.scrollTop = elements.messages.scrollHeight;
+  });
 }
 
 function getTypingDelay() {

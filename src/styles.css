@@ -41,14 +41,17 @@ body {
 
 #app {
   padding-top: var(--nav-h);
-  height: 100dvh;
+  height: calc(100dvh - var(--nav-h));
+  overflow: hidden;
 }
 
 .home {
+  height: 100%;
   padding: 5%;
   max-width: 70ch;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 3%;
 }
 
@@ -168,90 +171,12 @@ body {
   100% { text-shadow: 0 0 0.2em var(--accent-color); }
 }
 
-body.ultron-mode {
-  animation: screenGlitch 2.8s infinite;
-}
-
-@keyframes screenGlitch {
-  0%, 92%, 100% { transform: translate(0); }
-  93% { transform: translate(-0.2em, 0.1em); }
-  95% { transform: translate(0.2em, -0.1em); }
-}
-
-body.ultron-mode::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 999;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(255,255,255,0.03) 0,
-    rgba(255,255,255,0.03) 0.1em,
-    transparent 0.2em,
-    transparent 0.4em
-  );
-  mix-blend-mode: overlay;
-}
-
-body.ultron-mode::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 998;
-  background: rgba(255, 0, 0, 0.15);
-  animation: redFlash 4s infinite;
-}
-
-@keyframes redFlash {
-  0%, 90%, 100% { opacity: 0; }
-  92% { opacity: 0.25; }
-  94% { opacity: 0; }
-}
-
-.screen-distortion {
-  animation: distortion 0.4s ease;
-}
-
-@keyframes distortion {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.02) skew(2deg); }
-  100% { transform: scale(1); }
-}
-
-body.vision-mode {
-  animation: visionPulse 4s ease-in-out infinite;
-}
-
-@keyframes visionPulse {
-  0% { filter: brightness(1); }
-  50% { filter: brightness(1.08); }
-  100% { filter: brightness(1); }
-}
-
-body.vision-mode .terminal {
-  text-shadow: 0 0 0.6em rgba(255, 213, 79, 0.4);
-}
-
-body.vision-mode::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(
-    circle at center,
-    rgba(255, 213, 79, 0.08),
-    transparent 70%
-  );
-}
-
 #chat-container {
   display: flex;
   flex-direction: column;
-  height: calc(100dvh - var(--nav-h));
+  height: 100%;
   width: 100%;
-  padding: 3%;
+  overflow: hidden;
 }
 
 #chat-header {
@@ -291,8 +216,6 @@ body.vision-mode::before {
   height: 1em;
   margin-left: 0.3em;
   background: var(--accent-color);
-  vertical-align: middle;
-  transform: translateY(0.1em);
   animation: blinkBlock 0.9s infinite;
 }
 
@@ -301,20 +224,14 @@ body.vision-mode::before {
   50%, 100% { opacity: 0; }
 }
 
-.message.user .terminal-cursor {
-  background: white;
-}
-
 #chat-form {
   display: flex;
   align-items: center;
   gap: 2%;
   border-top: 1px solid #222;
-  padding-top: 2%;
+  padding: 2% 0;
   background: black;
   flex-shrink: 0;
-  position: sticky;
-  bottom: 0;
 }
 
 .input-wrapper {
@@ -341,7 +258,6 @@ body.vision-mode::before {
   color: var(--accent-color);
   padding: 1% 2%;
   cursor: pointer;
-  transition: 0.2s;
 }
 
 #chat-form button:hover {
@@ -357,4 +273,38 @@ body.vision-mode::before {
   .card {
     flex: 1;
   }
+}
+
+.jarvis-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.jarvis-orb {
+  position: absolute;
+  width: 12%;
+  aspect-ratio: 1/1;
+  background-image: url("assets/efecto jarvis.jpeg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0;
+  animation: jarvisFade 6s ease-in-out infinite, jarvisRotate 12s linear infinite;
+}
+
+.jarvis-orb:nth-child(1) { top: 10%; left: 15%; }
+.jarvis-orb:nth-child(2) { top: 25%; left: 70%; }
+.jarvis-orb:nth-child(3) { top: 60%; left: 20%; }
+.jarvis-orb:nth-child(4) { top: 70%; left: 65%; }
+.jarvis-orb:nth-child(5) { top: 40%; left: 45%; }
+
+@keyframes jarvisRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes jarvisFade {
+  0%,100% { opacity: 0; transform: scale(0.8); }
+  50% { opacity: 0.25; transform: scale(1); }
 }
