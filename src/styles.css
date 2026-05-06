@@ -1,8 +1,7 @@
 :root {
   --accent-color: #ffffff;
+  --nav-h: 8dvh;
 }
-
-/* RESET */
 
 * {
   box-sizing: border-box;
@@ -11,19 +10,23 @@
 }
 
 body {
-  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   background: black;
   font-family: "Fira Code", monospace;
 }
 
-/* NAV */
-
 .nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: var(--nav-h);
+  z-index: 1000;
   display: flex;
-  gap: 20px;
-  padding: 15px 30px;
+  align-items: center;
+  gap: 3%;
+  padding: 0 5%;
   border-bottom: 1px solid #222;
+  background: black;
 }
 
 .nav a {
@@ -33,17 +36,20 @@ body {
 }
 
 .nav a:hover {
-  text-shadow: 0 0 8px var(--accent-color);
+  text-shadow: 0 0 0.5em var(--accent-color);
 }
 
-/* HOME */
+#app {
+  padding-top: var(--nav-h);
+  height: 100dvh;
+}
 
 .home {
-  padding: 30px;
-  max-width: 700px;
+  padding: 5%;
+  max-width: 70ch;
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 3%;
 }
 
 .terminal {
@@ -55,12 +61,12 @@ body {
 
 .cursor {
   display: inline-block;
-  width: 10px;
-  height: 18px;
-  margin-left: 5px;
+  width: 0.6em;
+  height: 1.2em;
+  margin-left: 0.3em;
   background: var(--accent-color);
   position: relative;
-  top: 5px;
+  top: 0.2em;
   animation: blink 1.6s infinite;
 }
 
@@ -69,17 +75,15 @@ body {
   30%, 80% { opacity: 0; }
 }
 
-/* CHARACTERS */
-
 .characters {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 2%;
 }
 
 .card {
   border: 1px solid #333;
-  padding: 20px;
+  padding: 4%;
   cursor: pointer;
   background: #111;
   transition: 0.3s ease;
@@ -88,29 +92,27 @@ body {
 
 .card h2 {
   color: white;
-  font-size: 18px;
+  font-size: 1rem;
   font-weight: 700;
 }
 
 .card:hover {
   transform: scale(1.05);
   border-color: var(--accent-color);
-  box-shadow: 0 0 15px var(--accent-color);
+  box-shadow: 0 0 1em var(--accent-color);
 }
 
 .card.active {
   border-color: var(--accent-color);
-  box-shadow: 0 0 20px var(--accent-color);
+  box-shadow: 0 0 1.5em var(--accent-color);
 }
 
 .card.active h2 {
   color: var(--accent-color);
 }
 
-/* BUTTON */
-
 #start-btn {
-  padding: 15px;
+  padding: 3%;
   border: none;
   font-weight: bold;
   background: var(--accent-color);
@@ -121,7 +123,7 @@ body {
 
 #start-btn:hover:not(:disabled) {
   transform: scale(1.05);
-  box-shadow: 0 0 10px var(--accent-color);
+  box-shadow: 0 0 1em var(--accent-color);
 }
 
 #start-btn:disabled {
@@ -129,8 +131,6 @@ body {
   color: #999;
   cursor: not-allowed;
 }
-
-/* BACKGROUND */
 
 #background-visual {
   position: fixed;
@@ -156,21 +156,17 @@ body {
   50% { opacity: 0.4; }
 }
 
-/* GLITCH */
-
 .glitch {
   animation: glitchFlicker 0.3s infinite;
 }
 
 @keyframes glitchFlicker {
-  0% { text-shadow: 0 0 2px var(--accent-color); }
-  25% { text-shadow: -2px 0 red, 2px 0 cyan; }
-  50% { text-shadow: 0 0 4px var(--accent-color); }
-  75% { text-shadow: 1px 0 red, -1px 0 cyan; }
-  100% { text-shadow: 0 0 2px var(--accent-color); }
+  0% { text-shadow: 0 0 0.2em var(--accent-color); }
+  25% { text-shadow: -0.2em 0 red, 0.2em 0 cyan; }
+  50% { text-shadow: 0 0 0.4em var(--accent-color); }
+  75% { text-shadow: 0.1em 0 red, -0.1em 0 cyan; }
+  100% { text-shadow: 0 0 0.2em var(--accent-color); }
 }
-
-/* ULTRON */
 
 body.ultron-mode {
   animation: screenGlitch 2.8s infinite;
@@ -178,8 +174,8 @@ body.ultron-mode {
 
 @keyframes screenGlitch {
   0%, 92%, 100% { transform: translate(0); }
-  93% { transform: translate(-2px, 1px); }
-  95% { transform: translate(2px, -1px); }
+  93% { transform: translate(-0.2em, 0.1em); }
+  95% { transform: translate(0.2em, -0.1em); }
 }
 
 body.ultron-mode::before {
@@ -190,10 +186,10 @@ body.ultron-mode::before {
   z-index: 999;
   background: repeating-linear-gradient(
     to bottom,
-    rgba(255,255,255,0.03) 0px,
-    rgba(255,255,255,0.03) 1px,
-    transparent 2px,
-    transparent 4px
+    rgba(255,255,255,0.03) 0,
+    rgba(255,255,255,0.03) 0.1em,
+    transparent 0.2em,
+    transparent 0.4em
   );
   mix-blend-mode: overlay;
 }
@@ -224,8 +220,6 @@ body.ultron-mode::after {
   100% { transform: scale(1); }
 }
 
-/* VISION */
-
 body.vision-mode {
   animation: visionPulse 4s ease-in-out infinite;
 }
@@ -237,7 +231,7 @@ body.vision-mode {
 }
 
 body.vision-mode .terminal {
-  text-shadow: 0 0 6px rgba(255, 213, 79, 0.4);
+  text-shadow: 0 0 0.6em rgba(255, 213, 79, 0.4);
 }
 
 body.vision-mode::before {
@@ -252,14 +246,12 @@ body.vision-mode::before {
   );
 }
 
-/* CHAT */
-
 #chat-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: calc(100dvh - var(--nav-h));
   width: 100%;
-  padding: 20px;
+  padding: 3%;
 }
 
 #chat-header {
@@ -272,8 +264,8 @@ body.vision-mode::before {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding-right: 5px;
+  gap: 1%;
+  padding-right: 1%;
 }
 
 .message {
@@ -293,16 +285,14 @@ body.vision-mode::before {
   color: var(--accent-color);
 }
 
-/* CURSOR */
-
 .terminal-cursor {
   display: inline-block;
-  width: 8px;
-  height: 1.1em;
-  margin-left: 4px;
+  width: 0.5em;
+  height: 1em;
+  margin-left: 0.3em;
   background: var(--accent-color);
   vertical-align: middle;
-  transform: translateY(1px);
+  transform: translateY(0.1em);
   animation: blinkBlock 0.9s infinite;
 }
 
@@ -315,16 +305,16 @@ body.vision-mode::before {
   background: white;
 }
 
-/* INPUT */
-
 #chat-form {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 2%;
   border-top: 1px solid #222;
-  padding-top: 10px;
+  padding-top: 2%;
   background: black;
   flex-shrink: 0;
+  position: sticky;
+  bottom: 0;
 }
 
 .input-wrapper {
@@ -341,7 +331,7 @@ body.vision-mode::before {
   outline: none;
   color: white;
   font-family: "Fira Code", monospace;
-  font-size: 14px;
+  font-size: 0.9rem;
   caret-color: var(--accent-color);
 }
 
@@ -349,7 +339,7 @@ body.vision-mode::before {
   background: transparent;
   border: 1px solid var(--accent-color);
   color: var(--accent-color);
-  padding: 6px 12px;
+  padding: 1% 2%;
   cursor: pointer;
   transition: 0.2s;
 }
@@ -359,8 +349,6 @@ body.vision-mode::before {
   color: black;
 }
 
-/* RESPONSIVE */
-
 @media (min-width: 768px) {
   .characters {
     flex-direction: row;
@@ -368,19 +356,5 @@ body.vision-mode::before {
 
   .card {
     flex: 1;
-  }
-}
-
-@media (max-width: 768px) {
-  #chat-container {
-    padding: 12px;
-  }
-
-  #chat-input {
-    font-size: 13px;
-  }
-
-  #chat-messages {
-    font-size: 13px;
   }
 }
