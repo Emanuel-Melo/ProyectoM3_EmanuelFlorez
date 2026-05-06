@@ -2,9 +2,7 @@
   --accent-color: #ffffff;
 }
 
-/* =========================
-   RESET GLOBAL
-========================= */
+/* RESET */
 
 * {
   box-sizing: border-box;
@@ -13,16 +11,13 @@
 }
 
 body {
-  margin: 0;
   height: 100vh;
   overflow: hidden;
   background: black;
   font-family: "Fira Code", monospace;
 }
 
-/* =========================
-   NAV
-========================= */
+/* NAV */
 
 .nav {
   display: flex;
@@ -41,9 +36,7 @@ body {
   text-shadow: 0 0 8px var(--accent-color);
 }
 
-/* =========================
-   HOME
-========================= */
+/* HOME */
 
 .home {
   padding: 30px;
@@ -53,7 +46,6 @@ body {
   gap: 25px;
 }
 
-/* TERMINAL HOME */
 .terminal {
   color: var(--accent-color);
   line-height: 1.8;
@@ -61,7 +53,6 @@ body {
   text-transform: uppercase;
 }
 
-/* CURSOR HOME */
 .cursor {
   display: inline-block;
   width: 10px;
@@ -78,9 +69,7 @@ body {
   30%, 80% { opacity: 0; }
 }
 
-/* =========================
-   CARDS CHARACTERS
-========================= */
+/* CHARACTERS */
 
 .characters {
   display: flex;
@@ -94,8 +83,6 @@ body {
   cursor: pointer;
   background: #111;
   transition: 0.3s ease;
-
-  /* 🔥 FIX IMPORTANTE: asegura visibilidad */
   color: white;
 }
 
@@ -105,14 +92,12 @@ body {
   font-weight: 700;
 }
 
-/* hover */
 .card:hover {
   transform: scale(1.05);
   border-color: var(--accent-color);
   box-shadow: 0 0 15px var(--accent-color);
 }
 
-/* activo */
 .card.active {
   border-color: var(--accent-color);
   box-shadow: 0 0 20px var(--accent-color);
@@ -122,9 +107,7 @@ body {
   color: var(--accent-color);
 }
 
-/* =========================
-   BOTÓN START
-========================= */
+/* BUTTON */
 
 #start-btn {
   padding: 15px;
@@ -147,9 +130,7 @@ body {
   cursor: not-allowed;
 }
 
-/* =========================
-   BACKGROUND
-========================= */
+/* BACKGROUND */
 
 #background-visual {
   position: fixed;
@@ -175,9 +156,7 @@ body {
   50% { opacity: 0.4; }
 }
 
-/* =========================
-   GLITCH ULTRON
-========================= */
+/* GLITCH */
 
 .glitch {
   animation: glitchFlicker 0.3s infinite;
@@ -191,9 +170,7 @@ body {
   100% { text-shadow: 0 0 2px var(--accent-color); }
 }
 
-/* =========================
-   ULTRON MODE
-========================= */
+/* ULTRON */
 
 body.ultron-mode {
   animation: screenGlitch 2.8s infinite;
@@ -205,7 +182,6 @@ body.ultron-mode {
   95% { transform: translate(2px, -1px); }
 }
 
-/* scanlines */
 body.ultron-mode::before {
   content: "";
   position: fixed;
@@ -222,7 +198,6 @@ body.ultron-mode::before {
   mix-blend-mode: overlay;
 }
 
-/* flash rojo */
 body.ultron-mode::after {
   content: "";
   position: fixed;
@@ -239,7 +214,6 @@ body.ultron-mode::after {
   94% { opacity: 0; }
 }
 
-/* distortion */
 .screen-distortion {
   animation: distortion 0.4s ease;
 }
@@ -250,9 +224,7 @@ body.ultron-mode::after {
   100% { transform: scale(1); }
 }
 
-/* =========================
-   VISION MODE
-========================= */
+/* VISION */
 
 body.vision-mode {
   animation: visionPulse 4s ease-in-out infinite;
@@ -280,9 +252,7 @@ body.vision-mode::before {
   );
 }
 
-/* =========================
-   CHAT TERMINAL
-========================= */
+/* CHAT */
 
 #chat-container {
   display: flex;
@@ -290,12 +260,15 @@ body.vision-mode::before {
   height: 100vh;
   width: 100%;
   padding: 20px;
-  overflow: hidden;
 }
 
-/* mensajes */
+#chat-header {
+  flex-shrink: 0;
+}
+
 #chat-messages {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -320,9 +293,7 @@ body.vision-mode::before {
   color: var(--accent-color);
 }
 
-/* =========================
-   CURSOR TERMINAL █
-========================= */
+/* CURSOR */
 
 .terminal-cursor {
   display: inline-block;
@@ -344,25 +315,27 @@ body.vision-mode::before {
   background: white;
 }
 
-.message.bot .terminal-cursor {
-  background: var(--accent-color);
-}
-
-/* =========================
-   CHAT INPUT
-========================= */
+/* INPUT */
 
 #chat-form {
   display: flex;
+  align-items: center;
   gap: 10px;
-  flex-shrink: 0;
   border-top: 1px solid #222;
   padding-top: 10px;
   background: black;
+  flex-shrink: 0;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  flex: 1;
 }
 
 #chat-input {
   flex: 1;
+  min-width: 0;
   background: black;
   border: none;
   outline: none;
@@ -386,9 +359,7 @@ body.vision-mode::before {
   color: black;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+/* RESPONSIVE */
 
 @media (min-width: 768px) {
   .characters {

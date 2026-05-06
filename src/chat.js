@@ -6,13 +6,17 @@ let state = {
 
 let elements = {};
 
+/* =========================
+   INIT
+========================= */
+
 export function initChat() {
-  elements = {
-    container: document.querySelector("#chat-container"),
-    messages: document.querySelector("#chat-messages"),
-    form: document.querySelector("#chat-form"),
-    input: document.querySelector("#chat-input")
-  };
+  cacheDOM();
+
+  if (!elements.form || !elements.input || !elements.messages) {
+    console.error("❌ Chat no inicializado correctamente (DOM missing)");
+    return;
+  }
 
   const savedCharacter = localStorage.getItem("character");
   state.character = savedCharacter || "jarvis";
@@ -20,7 +24,26 @@ export function initChat() {
   applyCharacterTheme();
   bindEvents();
   renderWelcome();
+
+  elements.input.focus();
 }
+
+/* =========================
+   DOM CACHE
+========================= */
+
+function cacheDOM() {
+  elements = {
+    container: document.querySelector("#chat-container"),
+    messages: document.querySelector("#chat-messages"),
+    form: document.querySelector("#chat-form"),
+    input: document.querySelector("#chat-input")
+  };
+}
+
+/* =========================
+   EVENTS
+========================= */
 
 function bindEvents() {
   elements.form.addEventListener("submit", handleSubmit);
@@ -33,20 +56,29 @@ function bindEvents() {
   });
 }
 
+/* =========================
+   SUBMIT
+========================= */
+
 function handleSubmit(e) {
   e.preventDefault();
 
   const text = elements.input.value.trim();
+
   if (!text || state.isTyping) return;
 
   elements.input.value = "";
+
   simulateConversation(text);
 }
+
+/* =========================
+   FLOW
+========================= */
 
 function simulateConversation(userText) {
   state.isTyping = true;
 
-  // 1. Usuario con typing real
   typeMessage("user", userText, () => {
 
     showTypingIndicator();
@@ -56,7 +88,6 @@ function simulateConversation(userText) {
 
       const response = generateMockResponse(userText);
 
-      // 2. Bot con typing real
       typeMessage("bot", response, () => {
         state.isTyping = false;
       });
@@ -67,7 +98,7 @@ function simulateConversation(userText) {
 }
 
 /* =========================
-   🔥 TYPE ENGINE (CORE)
+   TYPE ENGINE
 ========================= */
 
 function typeMessage(role, text, callback) {
@@ -116,7 +147,7 @@ function typeMessage(role, text, callback) {
 }
 
 /* =========================
-   👋 WELCOME MESSAGE
+   WELCOME
 ========================= */
 
 function renderWelcome() {
@@ -130,10 +161,10 @@ function renderWelcome() {
 }
 
 /* =========================
-   🤖 RESPUESTAS SIMULADAS
+   MOCK AI
 ========================= */
 
-function generateMockResponse(input) {
+function generateMockResponse() {
   const responses = {
     ultron: [
       "YOU SPEAK AS IF YOU UNDERSTAND.",
@@ -160,7 +191,7 @@ function generateMockResponse(input) {
 }
 
 /* =========================
-   🎨 THEME
+   THEME
 ========================= */
 
 function applyCharacterTheme() {
@@ -169,7 +200,7 @@ function applyCharacterTheme() {
 }
 
 /* =========================
-   ⏳ TYPING INDICATOR
+   TYPING INDICATOR
 ========================= */
 
 function showTypingIndicator() {
@@ -188,7 +219,7 @@ function removeTypingIndicator() {
 }
 
 /* =========================
-   📜 UTILS
+   UTILS
 ========================= */
 
 function scrollToBottom() {

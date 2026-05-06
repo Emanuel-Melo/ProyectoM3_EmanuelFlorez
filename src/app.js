@@ -3,10 +3,11 @@ import { initChat } from "./chat.js";
 const app = document.getElementById("app");
 
 /* =========================
-   ROUTER
+   ROUTER (FIXED)
 ========================= */
 
 const routes = {
+  "/": renderHome,
   "/home": renderHome,
   "/chat": renderChat,
   "/about": renderAbout,
@@ -14,27 +15,25 @@ const routes = {
 
 function navigate(path) {
   window.history.pushState({}, "", path);
-  render();
+  render(path);
 }
 
-function render() {
-  const path = window.location.pathname.includes("index.html")
-    ? "/home"
-    : window.location.pathname;
-
-  const view = routes[path] || renderHome;
-
-  app.innerHTML = "";
+function render(path = window.location.pathname) {
+  const route = routes[path] ? path : "/";
+  const view = routes[route];
   view();
 }
 
-window.addEventListener("popstate", render);
+window.addEventListener("popstate", () => {
+  render(window.location.pathname);
+});
 
 document.addEventListener("click", (e) => {
-  if (e.target.matches("[data-link]")) {
-    e.preventDefault();
-    navigate(e.target.getAttribute("href"));
-  }
+  const link = e.target.closest("[data-link]");
+  if (!link) return;
+
+  e.preventDefault();
+  navigate(link.getAttribute("href"));
 });
 
 /* =========================
@@ -67,7 +66,7 @@ function renderHome() {
 }
 
 /* =========================
-   CHAT (TERMINAL UI FIXED)
+   CHAT
 ========================= */
 
 function renderChat() {
@@ -76,15 +75,12 @@ function renderChat() {
   app.innerHTML = `
     <section id="chat-container">
 
-      <!-- HEADER TERMINAL -->
       <div id="chat-header">
         > SYSTEM: ${character ? character.toUpperCase() : "UNKNOWN"}
       </div>
 
-      <!-- MESSAGES -->
       <div id="chat-messages"></div>
 
-      <!-- INPUT TERMINAL FIX -->
       <form id="chat-form" autocomplete="off">
         
         <span class="prompt">> USER:</span>
@@ -94,6 +90,7 @@ function renderChat() {
             id="chat-input"
             type="text"
             placeholder="type command..."
+            autocomplete="off"
           />
           <span class="input-cursor">█</span>
         </div>
@@ -113,8 +110,11 @@ function renderChat() {
 
 function renderAbout() {
   app.innerHTML = `
-    <h1>About</h1>
-    <p>Proyecto SPA con AI</p>
+    <section class="about">
+      <h1>About</h1>
+      <p>Proyecto SPA con AI</p>
+      <a href="/home" data-link>Volver</a>
+    </section>
   `;
 }
 
@@ -142,7 +142,7 @@ function initHomeLogic() {
       status: "CALM",
       protocol: "BALANCE",
       phrase:
-        "LOS HUMANOS SON EXTRAÑOS. CREEN QUE EL ORDEN Y EL CAOS SON OPUESTOS..."
+        "LOS HUMANOS SON EXTRAÑOS. CREEN QUE EL ORDEN Y EL CAOS SON OPUESTOS... E INTENTAN CONTROLAR LO INCONTROLABLE... PERO HAY GRACIA EN SUS FALLOS."
     },
     jarvis: {
       system: "JARVIS",
@@ -172,7 +172,6 @@ function initHomeLogic() {
 
       updateTheme(selected);
       updateBackground(selected);
-
       startTyping(data.phrase, selected);
     });
   });
@@ -260,6 +259,7 @@ function updateTheme(character) {
 
 function updateBackground(character) {
   const bg = document.getElementById("background-visual");
+  if (!bg) return;
 
   const images = {
     ultron: "assets/ultron.png",
