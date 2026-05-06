@@ -62,17 +62,19 @@ function handleSubmit(e) {
 
 function simulateConversation(userText) {
   state.isTyping = true;
+  setLoadingState(true);
 
   typeMessage("user", userText, () => {
-    showTypingIndicator();
+    const loadingEl = showLoadingMessage();
 
     setTimeout(() => {
-      removeTypingIndicator();
+      removeElement(loadingEl);
 
       const response = generateMockResponse();
 
       typeMessage("bot", response, () => {
         state.isTyping = false;
+        setLoadingState(false);
       });
 
     }, getTypingDelay());
@@ -164,19 +166,27 @@ function applyCharacterTheme() {
   document.body.classList.add(`${state.character}-mode`);
 }
 
-function showTypingIndicator() {
-  const typing = document.createElement("div");
-  typing.className = "message bot typing";
-  typing.id = "typing-indicator";
-  typing.textContent = "> SYSTEM: ...";
+function showLoadingMessage() {
+  const loading = document.createElement("div");
+  loading.className = "message bot loading";
+  loading.textContent = "> SYSTEM";
 
-  elements.messages.appendChild(typing);
+  elements.messages.appendChild(loading);
   scrollToBottom();
+
+  return loading;
 }
 
-function removeTypingIndicator() {
-  const el = document.getElementById("typing-indicator");
-  if (el) el.remove();
+function removeElement(el) {
+  if (el && el.parentNode) el.parentNode.removeChild(el);
+}
+
+function setLoadingState(isLoading) {
+  if (isLoading) {
+    elements.form.classList.add("loading");
+  } else {
+    elements.form.classList.remove("loading");
+  }
 }
 
 function scrollToBottom() {
@@ -192,4 +202,13 @@ function getTypingDelay() {
     case "jarvis": return 900;
     default: return 1000;
   }
+}
+
+function showErrorMessage(text) {
+  const line = document.createElement("div");
+  line.className = "message bot error";
+  line.textContent = `> ERROR: ${text}`;
+
+  elements.messages.appendChild(line);
+  scrollToBottom();
 }

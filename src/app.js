@@ -248,21 +248,17 @@ function updateTheme(character) {
 
 function updateBackground(character) {
   const bg = document.getElementById("background-visual");
-  if (!bg) return;
-
-  bg.innerHTML = "";
-  bg.style.backgroundImage = "";
-  bg.classList.remove("active-bg");
 
   const images = {
-    ultron: "assets/ultron.png",
-    vision: "assets/vision.png",
-    jarvis: "assets/jarvis.png"
+    ultron: "/src/assets/ultron.png",
+    vision: "/src/assets/vision.png",
+    jarvis: "/src/assets/jarvis.png"
   };
 
-  if (character === "jarvis") {
-    bg.style.backgroundImage = `url(${images.jarvis})`;
+  bg.innerHTML = "";
+  bg.style.backgroundImage = `url(${images[character] || ""})`;
 
+  if (character === "jarvis") {
     const layer = document.createElement("div");
     layer.className = "jarvis-layer";
 
@@ -277,14 +273,10 @@ function updateBackground(character) {
     }
 
     bg.appendChild(layer);
-    return;
   }
 
-  if (images[character]) {
-    bg.style.backgroundImage = `url(${images[character]})`;
-    void bg.offsetWidth;
-    bg.classList.add("active-bg");
-  }
+  bg.classList.remove("active-bg");
+  void bg.offsetWidth;
+  bg.classList.add("active-bg");
 }
-
 render();
