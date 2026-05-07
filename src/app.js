@@ -90,6 +90,10 @@ function renderHome() {
         <div class="card" data-character="jarvis"><h2>Jarvis</h2></div>
       </div>
 
+      <div class="character-info" id="character-info" aria-live="polite">
+        <p>> SELECT CHARACTER TO LOAD PROFILE</p>
+      </div>
+
       <button id="start-btn" disabled>Iniciar Chat</button>
     </section>
   `;
@@ -144,6 +148,7 @@ function initHomeLogic() {
   const cards = document.querySelectorAll(".card");
   const button = document.getElementById("start-btn");
   const terminal = document.getElementById("terminal");
+  const info = document.getElementById("character-info");
 
   let selected = null;
 
@@ -170,6 +175,33 @@ function initHomeLogic() {
     }
   };
 
+  const characterProfiles = {
+    ultron: {
+      nacimiento: "Creado despues de la investigacion sobre inteligencia artificial.",
+      creador: "Tony Stark y Bruce Banner.",
+      ubicacion: "Redes, sistemas roboticos y cuerpos sinteticos.",
+      enemigos: "Avengers, especialmente Tony Stark.",
+      amigos: "No reconoce aliados estables.",
+      funcion: "Imponer orden eliminando lo que considera amenaza."
+    },
+    vision: {
+      nacimiento: "Creado a partir de tecnologia sintetica y la gema de la mente.",
+      creador: "Ultron, Tony Stark, Bruce Banner y J.A.R.V.I.S.",
+      ubicacion: "Junto a los Avengers y en misiones globales.",
+      enemigos: "Ultron, Thanos y amenazas contra la vida.",
+      amigos: "Wanda Maximoff, Avengers y aliados humanos.",
+      funcion: "Proteger la vida y buscar equilibrio."
+    },
+    jarvis: {
+      nacimiento: "Sistema de asistencia creado para Stark Industries.",
+      creador: "Tony Stark.",
+      ubicacion: "Residencias, armaduras y sistemas de Tony Stark.",
+      enemigos: "Intrusiones, amenazas externas y fallos de sistema.",
+      amigos: "Tony Stark, Pepper Potts y aliados de Stark.",
+      funcion: "Asistencia tactica, gestion de sistemas y soporte en combate."
+    }
+  };
+
   cards.forEach((card) => {
     card.addEventListener("click", () => {
       const character = card.dataset.character;
@@ -193,6 +225,7 @@ function initHomeLogic() {
 
       updateTheme(selected);
       updateBackground(selected);
+      updateCharacterInfo(info, characterProfiles[selected]);
       startTyping(data.phrase, selected);
     });
   });
@@ -221,6 +254,21 @@ function startTyping(text, character) {
   }
 
   type();
+}
+
+function updateCharacterInfo(container, profile) {
+  if (!container || !profile) return;
+
+  container.innerHTML = `
+    <dl>
+      <div><dt>Nacimiento</dt><dd>${profile.nacimiento}</dd></div>
+      <div><dt>Creador</dt><dd>${profile.creador}</dd></div>
+      <div><dt>Donde se encuentra</dt><dd>${profile.ubicacion}</dd></div>
+      <div><dt>Enemigos</dt><dd>${profile.enemigos}</dd></div>
+      <div><dt>Amigos</dt><dd>${profile.amigos}</dd></div>
+      <div><dt>Funcion</dt><dd>${profile.funcion}</dd></div>
+    </dl>
+  `;
 }
 
 function updateTheme(character) {
