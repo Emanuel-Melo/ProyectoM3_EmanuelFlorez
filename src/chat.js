@@ -68,7 +68,7 @@ async function sendToAI() {
   const loadingEl = showLoadingMessage();
 
   try {
-    const response = await fetch("/api/functions", {
+    const response = await fetch("/api/chat", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -79,11 +79,11 @@ async function sendToAI() {
       })
     });
 
-    if (!response.ok) {
-      throw new Error("API error");
-    }
+    const data = await parseApiResponse(response);
 
-    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data?.reply || `API error ${response.status}`);
+    }
 
     removeElement(loadingEl);
 
@@ -91,10 +91,28 @@ async function sendToAI() {
 
   } catch (err) {
     removeElement(loadingEl);
-    showErrorMessage("Failed to connect to AI");
+    showErrorMessage(err?.message || "Failed to connect to AI");
   } finally {
     state.isTyping = false;
     setLoadingState(false);
+  }
+}
+
+async function parseApiResponse(response) {
+  const text = await response.text();
+
+  if (!text) {
+    return {
+      reply: `Empty response from API (${response.status})`
+    };
+  }
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    return {
+      reply: text
+    };
   }
 }
 

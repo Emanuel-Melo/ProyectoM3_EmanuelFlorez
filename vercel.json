@@ -1,9 +1,17 @@
 {
   "installCommand": "npm install",
-  "devCommand": "npm run dev",
+  "buildCommand": "npm run build",
   "rewrites": [
     {
-      "source": "/((?!api/.*).*)",
+      "source": "/home",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/chat",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/about",
       "destination": "/index.html"
     }
   ]

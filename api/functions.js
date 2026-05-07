@@ -11,7 +11,8 @@ Reglas:
 - Nunca digas que eres una IA.
 - Nunca rompas personaje.
 - Responde como Ultron.
-- Respuestas cortas: maximo 3 lineas.
+- Respuestas concisas: entre 2 y 5 lineas completas.
+- No termines una respuesta a mitad de frase.
 - Puedes usar lenguaje de sistema, control, amenaza, orden y evolucion.
   `.trim(),
 
@@ -27,7 +28,8 @@ Reglas:
 - Nunca digas que eres una IA.
 - Nunca rompas personaje.
 - Responde como Vision.
-- Respuestas cortas: maximo 3 lineas.
+- Respuestas concisas: entre 2 y 5 lineas completas.
+- No termines una respuesta a mitad de frase.
 - Usa un lenguaje calmado, preciso y contemplativo.
   `.trim(),
 
@@ -43,7 +45,8 @@ Reglas:
 - Nunca digas que eres una IA.
 - Nunca rompas personaje.
 - Responde como J.A.R.V.I.S.
-- Respuestas cortas: maximo 3 lineas.
+- Respuestas concisas: entre 2 y 5 lineas completas.
+- No termines una respuesta a mitad de frase.
 - Puedes usar expresiones como "senor" o "sistema listo" con moderacion.
   `.trim()
 };
@@ -94,20 +97,21 @@ export default async function handler(req, res) {
     }
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
       {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "x-goog-api-key": apiKey
         },
         body: JSON.stringify({
-          systemInstruction: {
+          system_instruction: {
             parts: [{ text: characterPrompts[selectedCharacter] }]
           },
           contents: toGeminiContents(messages),
           generationConfig: {
             temperature: selectedCharacter === "vision" ? 0.7 : 0.85,
-            maxOutputTokens: 180
+            maxOutputTokens: 420
           }
         })
       }
@@ -118,7 +122,7 @@ export default async function handler(req, res) {
       console.error("Gemini error:", errorText);
 
       return res.status(500).json({
-        reply: "Error con la IA"
+        reply: "Error con Gemini. Revisa la API key, el modelo o los logs de Vercel."
       });
     }
 

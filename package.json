@@ -4,8 +4,6 @@
   "description": "SPA para chatear con personajes usando AI (Gemini + Vercel)",
   "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0",
-    "start": "vite --host 0.0.0.0",
     "build": "echo \"No build step required\"",
     "test": "vitest run",
     "test:watch": "vitest"
