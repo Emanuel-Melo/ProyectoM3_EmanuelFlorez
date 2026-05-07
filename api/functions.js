@@ -111,7 +111,10 @@ export default async function handler(req, res) {
           contents: toGeminiContents(messages),
           generationConfig: {
             temperature: selectedCharacter === "vision" ? 0.7 : 0.85,
-            maxOutputTokens: 420
+            maxOutputTokens: 1200,
+            thinkingConfig: {
+              thinkingBudget: 0
+            }
           }
         })
       }
@@ -128,11 +131,15 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
+    const candidate = data?.candidates?.[0];
     const reply =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ||
+      candidate?.content?.parts?.map((part) => part.text || "").join("").trim() ||
       "No pude generar respuesta.";
 
-    return res.status(200).json({ reply });
+    return res.status(200).json({
+      reply,
+      finishReason: candidate?.finishReason || null
+    });
   } catch (error) {
     console.error("Server error:", error);
 
