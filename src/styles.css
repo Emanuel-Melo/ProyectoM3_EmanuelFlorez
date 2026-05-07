@@ -51,20 +51,26 @@ body {
 /* ================= HOME ================= */
 .home {
   height: 100%;
+  width: min(100%, 70ch);
   padding: 5%;
-  max-width: 70ch;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 3%;
 }
 
 /* ================= TERMINAL ================= */
 .terminal {
+  flex: 0 0 38%;
+  overflow: hidden;
   color: var(--accent-color);
   line-height: 1.8;
   font-weight: 700;
   text-transform: uppercase;
+}
+
+.terminal p {
+  min-height: 1.8em;
 }
 
 /* ================= CURSOR ================= */
@@ -86,12 +92,17 @@ body {
 
 /* ================= CHARACTERS ================= */
 .characters {
+  flex: 0 0 33%;
   display: flex;
   flex-direction: column;
   gap: 2%;
 }
 
 .card {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
   border: 1px solid #333;
   padding: 4%;
   cursor: pointer;
@@ -123,6 +134,8 @@ body {
 
 /* ================= BUTTON ================= */
 #start-btn {
+  flex: 0 0 10%;
+  width: 100%;
   padding: 3%;
   border: none;
   font-weight: bold;
@@ -152,21 +165,83 @@ body {
   background-repeat: no-repeat;
   background-position: center;
   opacity: 0;
-  will-change: opacity, transform; /* FIX performance */
+  filter: brightness(0.15) saturate(1.2) contrast(1.05);
+  transform: scale(0.98);
+  will-change: opacity, transform, filter; /* FIX performance */
 }
 
 .active-bg {
-  animation: powerOn 1.2s ease forwards, glow 3s infinite 1.2s;
+  animation:
+    powerOn 1.2s ease forwards,
+    glow 5.5s ease-in-out infinite 1.2s;
+}
+
+.ultron-bg {
+  --bg-opacity-low: 0.28;
+  --bg-opacity-high: 0.42;
+  --bg-brightness-low: 0.9;
+  --bg-brightness-high: 1.25;
+  --bg-saturation: 1.45;
+}
+
+.vision-bg {
+  --bg-opacity-low: 0.26;
+  --bg-opacity-high: 0.4;
+  --bg-brightness-low: 0.95;
+  --bg-brightness-high: 1.28;
+  --bg-saturation: 1.35;
+}
+
+.jarvis-bg {
+  --bg-opacity-low: 0.24;
+  --bg-opacity-high: 0.38;
+  --bg-brightness-low: 0.9;
+  --bg-brightness-high: 1.22;
+  --bg-saturation: 1.4;
 }
 
 @keyframes powerOn {
-  0% { opacity: 0.02; filter: brightness(0.2); }
-  100% { opacity: 0.35; filter: brightness(1); }
+  0% {
+    opacity: 0;
+    filter: brightness(0.1) saturate(var(--bg-saturation, 1.2)) contrast(1.05);
+    transform: scale(0.98);
+  }
+  18% {
+    opacity: var(--bg-opacity-high, 0.4);
+    filter: brightness(var(--bg-brightness-high, 1.25)) saturate(var(--bg-saturation, 1.2)) contrast(1.12);
+  }
+  28% {
+    opacity: 0.08;
+    filter: brightness(0.35) saturate(var(--bg-saturation, 1.2)) contrast(1.05);
+  }
+  52% {
+    opacity: var(--bg-opacity-high, 0.4);
+    filter: brightness(var(--bg-brightness-high, 1.25)) saturate(var(--bg-saturation, 1.2)) contrast(1.12);
+  }
+  100% {
+    opacity: var(--bg-opacity-low, 0.3);
+    filter: brightness(var(--bg-brightness-low, 0.9)) saturate(var(--bg-saturation, 1.2)) contrast(1.08);
+    transform: scale(1);
+  }
 }
 
 @keyframes glow {
-  0%, 100% { opacity: 0.32; }
-  50% { opacity: 0.4; }
+  0%, 11%, 50%, 83%, 100% {
+    opacity: var(--bg-opacity-low, 0.3);
+    filter: brightness(var(--bg-brightness-low, 0.9)) saturate(var(--bg-saturation, 1.2)) contrast(1.08);
+  }
+  8%, 49% {
+    opacity: calc(var(--bg-opacity-low, 0.3) - 0.08);
+    filter: brightness(0.72) saturate(var(--bg-saturation, 1.2)) contrast(1.02);
+  }
+  9%, 48%, 82% {
+    opacity: var(--bg-opacity-high, 0.4);
+    filter: brightness(var(--bg-brightness-high, 1.25)) saturate(var(--bg-saturation, 1.2)) contrast(1.12);
+  }
+  10% {
+    opacity: calc(var(--bg-opacity-low, 0.3) - 0.04);
+    filter: brightness(0.86) saturate(var(--bg-saturation, 1.2)) contrast(1.05);
+  }
 }
 
 /* ================= GLITCH ================= */
@@ -281,6 +356,7 @@ body {
 /* ================= MEDIA ================= */
 @media (min-width: 768px) {
   .characters {
+    flex-basis: 24%;
     flex-direction: row;
   }
 

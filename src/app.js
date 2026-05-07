@@ -66,7 +66,7 @@ function resetGlobalState() {
   if (bg) {
     bg.innerHTML = "";
     bg.style.backgroundImage = "";
-    bg.classList.remove("active-bg");
+    bg.classList.remove("active-bg", "ultron-bg", "vision-bg", "jarvis-bg");
   }
 }
 
@@ -259,7 +259,16 @@ function updateBackground(character) {
     jarvis: "/src/assets/jarvis.png"
   };
 
+  bg.classList.remove("active-bg", "ultron-bg", "vision-bg", "jarvis-bg");
   bg.style.backgroundImage = `url(${images[character] || ""})`;
+
+  if (!images[character]) return;
+
+  bg.classList.add(`${character}-bg`);
+
+  requestAnimationFrame(() => {
+    bg.classList.add("active-bg");
+  });
 }
 
 // ================= INIT =================
