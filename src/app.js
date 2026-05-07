@@ -155,20 +155,20 @@ function initHomeLogic() {
       status: "ACTIVE",
       protocol: "EXTINCTION",
       phrase:
-        "CUANDO EL POLVO SE ASIENTE... SOLO QUEDARÁ EL ORDEN."
+        "CUANDO EL POLVO SE ASIENTE, LO ÚNICO QUE VIVIRÁ EN ESTE MUNDO... !SERÁ METAL¡."
     },
     vision: {
       system: "VISION",
       status: "CALM",
       protocol: "BALANCE",
       phrase:
-        "La humanidad es contradictoria... pero fascinante."
+        "LOS HUMANOS SON EXTRAÑOS... CREEN QUE EL ORDEN Y EL CAOS SON OPUESTOS, E INTENTAN CONTROLAR LO INCONTROLABLE... PERO HAY GRACIA EN SUS FALLOS."
     },
     jarvis: {
       system: "JARVIS",
       status: "ONLINE",
       protocol: "ASSISTANCE",
-      phrase: "A su servicio, señor."
+      phrase: "A SU SERVICIO, SEÑOR STARK."
     }
   };
 

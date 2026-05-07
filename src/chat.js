@@ -123,6 +123,13 @@ function typeMessage(role, text) {
   const line = document.createElement("div");
   line.className = `message ${role}`;
 
+  if (role === "bot") {
+    const prefix = document.createElement("span");
+    prefix.className = "speaker-label";
+    prefix.textContent = `> ${getCharacterLabel()}: `;
+    line.appendChild(prefix);
+  }
+
   const content = document.createElement("span");
   content.className = "text";
 
@@ -153,6 +160,16 @@ function typeMessage(role, text) {
   }
 
   type();
+}
+
+function getCharacterLabel() {
+  const labels = {
+    ultron: "ULTRON",
+    vision: "VISION",
+    jarvis: "JARVIS"
+  };
+
+  return labels[state.character] || "SYSTEM";
 }
 
 // ================= WELCOME =================
@@ -199,7 +216,7 @@ function applyCharacterTheme() {
 function showLoadingMessage() {
   const loading = document.createElement("div");
   loading.className = "message bot loading";
-  loading.textContent = "> thinking...";
+  loading.textContent = `> ${getCharacterLabel()}: thinking...`;
 
   elements.messages.appendChild(loading);
   scrollToBottom();
