@@ -249,12 +249,114 @@ body {
   animation: glitchFlicker 0.3s infinite;
 }
 
+body.ultron-mode .terminal {
+  animation: ultronTerminalPulse 2.4s steps(2, end) infinite;
+}
+
+body.ultron-mode #typing-text {
+  animation: ultronTextHack 0.42s steps(2, end) infinite;
+}
+
+body.ultron-mode #typing-text::after {
+  content: " [BREACH]";
+  display: inline-block;
+  width: 0;
+  overflow: visible;
+  color: #ff6b6b;
+  opacity: 0;
+  text-shadow: 0 0 0.5em #ff2a2a;
+  animation: ultronDataLeak 1.8s steps(1, end) infinite;
+}
+
+body.ultron-mode .cursor {
+  animation: ultronCursorHack 0.55s steps(1, end) infinite;
+}
+
 @keyframes glitchFlicker {
   0% { text-shadow: 0 0 0.2em var(--accent-color); }
   25% { text-shadow: -0.2em 0 red, 0.2em 0 cyan; }
   50% { text-shadow: 0 0 0.4em var(--accent-color); }
   75% { text-shadow: 0.1em 0 red, -0.1em 0 cyan; }
   100% { text-shadow: 0 0 0.2em var(--accent-color); }
+}
+
+@keyframes ultronTerminalPulse {
+  0%, 100% {
+    text-shadow: 0 0 0.25em rgba(255, 42, 42, 0.55);
+  }
+  18% {
+    text-shadow: -0.08em 0 rgba(255, 42, 42, 0.85), 0.08em 0 rgba(0, 255, 255, 0.35);
+  }
+  19%, 23% {
+    text-shadow: none;
+  }
+  24%, 62% {
+    text-shadow: 0 0 0.35em rgba(255, 42, 42, 0.65);
+  }
+  63% {
+    text-shadow: 0.08em 0 rgba(255, 42, 42, 0.85), -0.08em 0 rgba(0, 255, 255, 0.35);
+  }
+}
+
+@keyframes ultronTextHack {
+  0%, 100% {
+    color: var(--accent-color);
+    opacity: 1;
+    filter: none;
+  }
+  12% {
+    color: #ffffff;
+    opacity: 0.92;
+    filter: contrast(1.4);
+  }
+  13%, 17% {
+    color: #ff2a2a;
+    opacity: 0.72;
+    filter: contrast(1.8);
+  }
+  18%, 45% {
+    color: var(--accent-color);
+    opacity: 1;
+    filter: none;
+  }
+  46% {
+    color: #ff9f9f;
+    opacity: 0.84;
+    filter: contrast(1.6);
+  }
+}
+
+@keyframes ultronDataLeak {
+  0%, 78%, 100% { opacity: 0; }
+  79% { opacity: 0.75; }
+  80% { opacity: 0; }
+  86% { opacity: 0.8; }
+  87% { opacity: 0; }
+  93% { opacity: 0.7; }
+  94% { opacity: 0; }
+}
+
+@keyframes ultronCursorHack {
+  0%, 100% {
+    opacity: 1;
+    background: #ff2a2a;
+    box-shadow: 0 0 0.35em rgba(255, 42, 42, 0.7);
+  }
+  24%, 26% {
+    opacity: 0;
+    background: white;
+    box-shadow: none;
+  }
+  42% {
+    opacity: 1;
+    background: #ffffff;
+    box-shadow: 0 0 0.45em rgba(255, 255, 255, 0.75);
+  }
+  63%, 68% {
+    opacity: 0.35;
+    background: #ff2a2a;
+    box-shadow: 0 0 0.2em rgba(255, 42, 42, 0.5);
+  }
 }
 
 /* ================= CHAT ================= */
