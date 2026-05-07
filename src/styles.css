@@ -414,6 +414,18 @@ body.ultron-mode .cursor {
   animation: ultronCursorHack 1.1s steps(1, end) infinite;
 }
 
+body.ultron-mode::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 890;
+  pointer-events: none;
+  opacity: 0;
+  background: white;
+  mix-blend-mode: screen;
+  animation: ultronWhiteFlash 8.5s steps(1, end) infinite;
+}
+
 body.ultron-mode::after {
   content: "";
   position: fixed;
@@ -430,6 +442,33 @@ body.ultron-mode::after {
     );
   mix-blend-mode: screen;
   animation: screenHackGlitch 7s steps(1, end) infinite;
+}
+
+body.vision-mode::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 890;
+  pointer-events: none;
+  opacity: 0.55;
+  box-shadow:
+    inset 0 0 4vmin rgba(255, 213, 79, 0.28),
+    inset 0 0 10vmin rgba(255, 213, 79, 0.16);
+  animation: visionEdgeAura 7.5s ease-in-out infinite;
+}
+
+#background-visual.jarvis-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background-image: url("/src/assets/efecto jarvis.jpeg");
+  background-repeat: no-repeat;
+  background-size: 22%;
+  background-position: 72% 48%;
+  mix-blend-mode: screen;
+  animation: jarvisInterfaceLight 8s ease-in-out infinite 1.2s;
 }
 
 @keyframes glitchFlicker {
@@ -535,6 +574,43 @@ body.ultron-mode::after {
   95% {
     opacity: 0;
     transform: translateX(0);
+  }
+}
+
+@keyframes ultronWhiteFlash {
+  0%, 72%, 74%, 100% { opacity: 0; }
+  72.4% { opacity: 0.16; }
+  72.8% { opacity: 0.04; }
+  73.2% { opacity: 0.11; }
+}
+
+@keyframes visionEdgeAura {
+  0%, 100% {
+    opacity: 0.42;
+    box-shadow:
+      inset 0 0 3vmin rgba(255, 213, 79, 0.22),
+      inset 0 0 8vmin rgba(255, 213, 79, 0.12);
+  }
+  50% {
+    opacity: 0.72;
+    box-shadow:
+      inset 0 0 5vmin rgba(255, 213, 79, 0.34),
+      inset 0 0 12vmin rgba(255, 213, 79, 0.2);
+  }
+}
+
+@keyframes jarvisInterfaceLight {
+  0%, 100% {
+    opacity: 0.06;
+    transform: translateX(0) rotate(0deg) scale(0.92);
+  }
+  35% {
+    opacity: 0.22;
+    transform: translateX(-3%) rotate(12deg) scale(1);
+  }
+  70% {
+    opacity: 0.12;
+    transform: translateX(2%) rotate(28deg) scale(0.96);
   }
 }
 
