@@ -39,18 +39,30 @@ function render(path = window.location.pathname) {
   }
 }
 
-window.addEventListener("popstate", () => {
+if (window.__aiCharacterChatPopstateHandler) {
+  window.removeEventListener("popstate", window.__aiCharacterChatPopstateHandler);
+}
+
+window.__aiCharacterChatPopstateHandler = () => {
   render(window.location.pathname);
-});
+};
+
+window.addEventListener("popstate", window.__aiCharacterChatPopstateHandler);
 
 // 🔥 delegación segura de clicks SPA
-document.addEventListener("click", (e) => {
+if (window.__aiCharacterChatClickHandler) {
+  document.removeEventListener("click", window.__aiCharacterChatClickHandler);
+}
+
+window.__aiCharacterChatClickHandler = (e) => {
   const link = e.target.closest("[data-link]");
   if (!link) return;
 
   e.preventDefault();
   navigate(link.getAttribute("href"));
-});
+};
+
+document.addEventListener("click", window.__aiCharacterChatClickHandler);
 
 function resetGlobalState() {
   const bg = document.getElementById("background-visual");

@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "echo \"No build step required\"",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "test": "vitest run --environment jsdom",
+    "test:watch": "vitest --environment jsdom"
   },
   "author": "Emanuel Florez",
   "license": "MIT",
