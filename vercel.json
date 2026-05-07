@@ -1,4 +1,6 @@
 {
+  "installCommand": "npm install",
+  "devCommand": "npm run dev",
   "rewrites": [
     {
       "source": "/((?!api/.*).*)",

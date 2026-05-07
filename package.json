@@ -4,8 +4,8 @@
   "description": "SPA para chatear con personajes usando AI (Gemini + Vercel)",
   "type": "module",
   "scripts": {
-    "dev": "vercel dev",
-    "start": "vercel dev",
+    "dev": "vite --host 0.0.0.0",
+    "start": "vite --host 0.0.0.0",
     "build": "echo \"No build step required\"",
     "test": "vitest run",
     "test:watch": "vitest"
@@ -13,10 +13,13 @@
   "author": "Emanuel Florez",
   "license": "MIT",
   "devDependencies": {
-    "vitest": "^1.0.0",
-    "jsdom": "^24.0.0"
+    "jsdom": "^24.0.0",
+    "vitest": "^1.0.0"
   },
   "vitest": {
     "environment": "jsdom"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1"
   }
 }

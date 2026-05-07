@@ -74,6 +74,7 @@ async function sendToAI() {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
+        character: state.character,
         messages: buildPayload()
       })
     });
