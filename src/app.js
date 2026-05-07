@@ -9,26 +9,40 @@ const routes = {
   "/about": renderAbout
 };
 
+// 🔥 Normaliza rutas
+function normalizePath(path) {
+  if (!path || path === "/") return "/home";
+  return path;
+}
+
 function navigate(path) {
-  if (window.location.pathname === path) return;
-  window.history.pushState({}, "", path);
-  render(path);
+  const normalized = normalizePath(path);
+
+  if (window.location.pathname === normalized) return;
+
+  window.history.pushState({}, "", normalized);
+  render(normalized);
 }
 
 function render(path = window.location.pathname) {
-  const route = routes[path] ? path : "/";
-  const view = routes[route];
+  const normalized = normalizePath(path);
+  const view = routes[normalized] || routes["/home"];
 
   app.innerHTML = "";
+
   view();
 
-  if (route === "/" || route === "/home") {
+  // reset solo en home
+  if (normalized === "/home") {
     resetGlobalState();
   }
 }
 
-window.addEventListener("popstate", () => render());
+window.addEventListener("popstate", () => {
+  render(window.location.pathname);
+});
 
+// 🔥 delegación segura de clicks SPA
 document.addEventListener("click", (e) => {
   const link = e.target.closest("[data-link]");
   if (!link) return;
@@ -40,7 +54,13 @@ document.addEventListener("click", (e) => {
 function resetGlobalState() {
   const bg = document.getElementById("background-visual");
 
-  document.body.classList.remove("ultron-mode", "vision-mode", "jarvis-mode", "screen-distortion");
+  document.body.classList.remove(
+    "ultron-mode",
+    "vision-mode",
+    "jarvis-mode",
+    "screen-distortion"
+  );
+
   document.documentElement.style.setProperty("--accent-color", "#ffffff");
 
   if (bg) {
@@ -50,6 +70,7 @@ function resetGlobalState() {
   }
 }
 
+// ================= HOME =================
 function renderHome() {
   resetGlobalState();
 
@@ -75,6 +96,7 @@ function renderHome() {
   initHomeLogic();
 }
 
+// ================= CHAT =================
 function renderChat() {
   const character = localStorage.getItem("character") || "unknown";
 
@@ -104,9 +126,11 @@ function renderChat() {
     </section>
   `;
 
-  initChat();
+  // 🔥 inicializa chat correctamente
+  initChat(character);
 }
 
+// ================= ABOUT =================
 function renderAbout() {
   app.innerHTML = `
     <section class="about">
@@ -117,6 +141,7 @@ function renderAbout() {
   `;
 }
 
+// ================= HOME LOGIC =================
 function initHomeLogic() {
   const cards = document.querySelectorAll(".card");
   const button = document.getElementById("start-btn");
@@ -130,20 +155,20 @@ function initHomeLogic() {
       status: "ACTIVE",
       protocol: "EXTINCTION",
       phrase:
-        "CUANDO EL POLVO SE ASIENTE, LO ÚNICO QUE VIVIRÁ EN ESTE MUNDO... ¡SERÁ METAL!"
+        "CUANDO EL POLVO SE ASIENTE... SOLO QUEDARÁ EL ORDEN."
     },
     vision: {
       system: "VISION",
       status: "CALM",
       protocol: "BALANCE",
       phrase:
-        "LOS HUMANOS SON EXTRAÑOS. CREEN QUE EL ORDEN Y EL CAOS SON OPUESTOS... E INTENTAN CONTROLAR LO INCONTROLABLE... PERO HAY GRACIA EN SUS FALLOS."
+        "La humanidad es contradictoria... pero fascinante."
     },
     jarvis: {
       system: "JARVIS",
       status: "ONLINE",
       protocol: "ASSISTANCE",
-      phrase: "A SU SERVICIO, SEÑOR STARK."
+      phrase: "A su servicio, señor."
     }
   };
 
@@ -179,6 +204,7 @@ function initHomeLogic() {
   });
 }
 
+// ================= HELPERS =================
 function startTyping(text, character) {
   const el = document.getElementById("typing-text");
   if (!el) return;
@@ -187,26 +213,12 @@ function startTyping(text, character) {
   let i = 0;
 
   function type() {
-    if (i >= text.length) {
-      el.classList.remove("glitch");
-      return;
-    }
+    if (i >= text.length) return;
 
-    const char = text[i];
-    el.textContent += char;
-
-    let delay = character === "vision" ? 60 : 30;
-
-    if (char === "." || char === "," || char === ";") delay += 150;
-    if (text.slice(i, i + 3) === "...") delay += 400;
-
-    if (character === "ultron" && Math.random() < 0.25) {
-      el.classList.add("glitch");
-    } else {
-      el.classList.remove("glitch");
-    }
-
+    el.textContent += text[i];
     i++;
+
+    const delay = character === "vision" ? 60 : 30;
     setTimeout(type, delay);
   }
 
@@ -225,20 +237,16 @@ function updateTheme(character) {
 
   root.style.setProperty("--accent-color", colors[character] || "#ffffff");
 
-  body.classList.remove("ultron-mode", "vision-mode", "jarvis-mode", "screen-distortion");
+  body.classList.remove(
+    "ultron-mode",
+    "vision-mode",
+    "jarvis-mode",
+    "screen-distortion"
+  );
 
-  if (character === "ultron") {
-    body.classList.add("ultron-mode", "screen-distortion");
-    setTimeout(() => body.classList.remove("screen-distortion"), 400);
-  }
-
-  if (character === "vision") {
-    body.classList.add("vision-mode");
-  }
-
-  if (character === "jarvis") {
-    body.classList.add("jarvis-mode");
-  }
+  if (character === "ultron") body.classList.add("ultron-mode");
+  if (character === "vision") body.classList.add("vision-mode");
+  if (character === "jarvis") body.classList.add("jarvis-mode");
 }
 
 function updateBackground(character) {
@@ -251,27 +259,8 @@ function updateBackground(character) {
     jarvis: "/src/assets/jarvis.png"
   };
 
-  bg.innerHTML = "";
   bg.style.backgroundImage = `url(${images[character] || ""})`;
-
-  if (character === "jarvis") {
-    const layer = document.createElement("div");
-    layer.className = "jarvis-layer";
-
-    for (let i = 0; i < 5; i++) {
-      const orb = document.createElement("div");
-      orb.className = "jarvis-orb";
-      orb.style.top = Math.random() * 70 + "%";
-      orb.style.left = Math.random() * 70 + "%";
-      layer.appendChild(orb);
-    }
-
-    bg.appendChild(layer);
-  }
-
-  bg.classList.remove("active-bg");
-  void bg.offsetWidth;
-  bg.classList.add("active-bg");
 }
 
+// ================= INIT =================
 render();

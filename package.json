@@ -1,18 +1,22 @@
 {
   "name": "ai-character-chat",
   "version": "1.0.0",
-  "description": "SPA para chatear con personajes usando AI",
+  "description": "SPA para chatear con personajes usando AI (Gemini + Vercel)",
   "type": "module",
   "scripts": {
     "dev": "vercel dev",
-    "build": "echo build step not required",
     "start": "vercel dev",
+    "build": "echo \"No build step required\"",
     "test": "vitest run",
     "test:watch": "vitest"
   },
   "author": "Emanuel Florez",
   "license": "MIT",
   "devDependencies": {
-    "vitest": "^1.0.0"
+    "vitest": "^1.0.0",
+    "jsdom": "^24.0.0"
+  },
+  "vitest": {
+    "environment": "jsdom"
   }
 }

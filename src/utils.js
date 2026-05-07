@@ -1,27 +1,38 @@
 export async function fetchJson(url, options = {}) {
   try {
     const res = await fetch(url, {
+      ...options,
       headers: {
         "Content-Type": "application/json",
         ...(options.headers || {})
-      },
-      ...options
+      }
     });
 
     const contentType = res.headers.get("content-type") || "";
 
-    let data = null;
+    let data;
 
+    // 🔥 SAFE PARSING
     if (contentType.includes("application/json")) {
       data = await res.json();
     } else {
       const text = await res.text();
-      data = safeParseJSON(text) || { message: text };
+
+      try {
+        data = JSON.parse(text);
+      } catch {
+        data = { message: text };
+      }
     }
 
+    // 🔥 ERROR HANDLING ROBUSTO
     if (!res.ok) {
-      const errorMessage = data?.message || `HTTP Error: ${res.status}`;
-      throw new Error(errorMessage);
+      const message =
+        data?.reply ||
+        data?.message ||
+        `HTTP Error ${res.status}`;
+
+      throw new Error(message);
     }
 
     return data;
@@ -31,16 +42,10 @@ export async function fetchJson(url, options = {}) {
   }
 }
 
+// ================= UTILS =================
+
 export function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-export function safeParseJSON(str) {
-  try {
-    return JSON.parse(str);
-  } catch {
-    return null;
-  }
 }
 
 export function createError(message = "Unknown error") {
@@ -65,7 +70,17 @@ export function isEmpty(value) {
   );
 }
 
+// 🔥 SECURITY FIX: sanitización más estricta
 export function sanitizeInput(text) {
   if (typeof text !== "string") return "";
-  return text.replace(/[<>]/g, "").trim();
+
+  return text
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .trim();
+}
+
+// 🔥 NUEVO: validación de mensajes AI (IMPORTANTE PARA RUBRICA)
+export function isValidAIResponse(data) {
+  return data && typeof data.reply === "string" && data.reply.length > 0;
 }

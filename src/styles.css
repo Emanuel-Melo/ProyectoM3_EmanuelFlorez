@@ -1,6 +1,6 @@
 :root {
   --accent-color: #ffffff;
-  --nav-h: 8dvh;
+  --nav-h: 8vh; /* FIX: más estable que dvh */
 }
 
 * {
@@ -16,6 +16,7 @@ body {
   font-family: "Fira Code", monospace;
 }
 
+/* ================= NAV ================= */
 .nav {
   position: fixed;
   inset: 0 0 auto 0;
@@ -39,12 +40,15 @@ body {
   text-shadow: 0 0 0.5em var(--accent-color);
 }
 
+/* ================= APP ================= */
 #app {
   padding-top: var(--nav-h);
   height: calc(100dvh - var(--nav-h));
   overflow: hidden;
+  display: flex; /* FIX: estabilidad layout SPA */
 }
 
+/* ================= HOME ================= */
 .home {
   height: 100%;
   padding: 5%;
@@ -55,6 +59,7 @@ body {
   gap: 3%;
 }
 
+/* ================= TERMINAL ================= */
 .terminal {
   color: var(--accent-color);
   line-height: 1.8;
@@ -62,6 +67,7 @@ body {
   text-transform: uppercase;
 }
 
+/* ================= CURSOR ================= */
 .cursor {
   display: inline-block;
   width: 0.6em;
@@ -78,6 +84,7 @@ body {
   30%, 80% { opacity: 0; }
 }
 
+/* ================= CHARACTERS ================= */
 .characters {
   display: flex;
   flex-direction: column;
@@ -114,6 +121,7 @@ body {
   color: var(--accent-color);
 }
 
+/* ================= BUTTON ================= */
 #start-btn {
   padding: 3%;
   border: none;
@@ -135,6 +143,7 @@ body {
   cursor: not-allowed;
 }
 
+/* ================= BACKGROUND ================= */
 #background-visual {
   position: fixed;
   inset: 0;
@@ -143,6 +152,7 @@ body {
   background-repeat: no-repeat;
   background-position: center;
   opacity: 0;
+  will-change: opacity, transform; /* FIX performance */
 }
 
 .active-bg {
@@ -159,6 +169,7 @@ body {
   50% { opacity: 0.4; }
 }
 
+/* ================= GLITCH ================= */
 .glitch {
   animation: glitchFlicker 0.3s infinite;
 }
@@ -171,16 +182,13 @@ body {
   100% { text-shadow: 0 0 0.2em var(--accent-color); }
 }
 
+/* ================= CHAT ================= */
 #chat-container {
   display: flex;
   flex-direction: column;
   height: 100%;
   width: 100%;
   overflow: hidden;
-}
-
-#chat-header {
-  flex-shrink: 0;
 }
 
 #chat-messages {
@@ -191,6 +199,9 @@ body {
   flex-direction: column;
   gap: 1%;
   padding-right: 1%;
+
+  /* FIX scroll smooth mobile */
+  -webkit-overflow-scrolling: touch;
 }
 
 .message {
@@ -210,6 +221,7 @@ body {
   color: var(--accent-color);
 }
 
+/* ================= CURSOR CHAT ================= */
 .terminal-cursor {
   display: inline-block;
   width: 0.5em;
@@ -224,6 +236,7 @@ body {
   50%, 100% { opacity: 0; }
 }
 
+/* ================= FORM ================= */
 #chat-form {
   display: flex;
   align-items: center;
@@ -265,6 +278,7 @@ body {
   color: black;
 }
 
+/* ================= MEDIA ================= */
 @media (min-width: 768px) {
   .characters {
     flex-direction: row;
@@ -275,6 +289,7 @@ body {
   }
 }
 
+/* ================= JARVIS ================= */
 .jarvis-layer {
   position: absolute;
   inset: 0;
@@ -293,12 +308,6 @@ body {
   animation: jarvisFade 6s ease-in-out infinite, jarvisRotate 10s linear infinite;
 }
 
-.jarvis-orb:nth-child(1) { top: 10%; left: 15%; }
-.jarvis-orb:nth-child(2) { top: 25%; left: 70%; }
-.jarvis-orb:nth-child(3) { top: 60%; left: 20%; }
-.jarvis-orb:nth-child(4) { top: 70%; left: 65%; }
-.jarvis-orb:nth-child(5) { top: 40%; left: 45%; }
-
 @keyframes jarvisRotate {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
@@ -309,24 +318,9 @@ body {
   50% { opacity: 0.25; transform: scale(1); }
 }
 
-.message.typing {
-  opacity: 0.6;
-  font-style: italic;
-}
-
+/* ================= STATES ================= */
 .message.loading {
   opacity: 0.6;
-}
-
-.message.loading::after {
-  content: " ...";
-  animation: dots 1.2s infinite;
-}
-
-@keyframes dots {
-  0% { content: " ."; }
-  33% { content: " .."; }
-  66% { content: " ..."; }
 }
 
 .message.error {

@@ -2,27 +2,34 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
   <title>AI Character Chat</title>
 
+  <!-- FONT -->
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="/src/styles.css" />
+  <!-- STYLES -->
+  <link rel="stylesheet" href="/src/styles.css">
 </head>
 
 <body>
 
+  <!-- BACKGROUND LAYER -->
   <div id="background-visual"></div>
 
+  <!-- NAVIGATION (SPA) -->
   <nav class="nav">
     <a href="/home" data-link>Home</a>
     <a href="/chat" data-link>Chat</a>
     <a href="/about" data-link>About</a>
   </nav>
 
+  <!-- APP ROOT -->
   <main id="app"></main>
 
+  <!-- MAIN JS (SPA ENTRY POINT) -->
   <script type="module" src="/src/app.js"></script>
 
 </body>

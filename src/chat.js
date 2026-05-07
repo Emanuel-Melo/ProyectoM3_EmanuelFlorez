@@ -12,9 +12,8 @@ export function initChat() {
 
   if (!elements.form || !elements.input || !elements.messages) return;
 
-  const savedCharacter = localStorage.getItem("character");
-  state.character = savedCharacter || "jarvis";
-  state.messages = [];
+  state.character = localStorage.getItem("character") || "jarvis";
+  state.messages = loadHistory();
   state.isTyping = false;
 
   applyCharacterTheme();
@@ -25,19 +24,23 @@ export function initChat() {
   }
 
   elements.messages.innerHTML = "";
+
+  renderHistory();
   renderWelcome();
+
   elements.input.focus();
 }
 
+// ================= DOM =================
 function cacheDOM() {
   elements = {
-    container: document.querySelector("#chat-container"),
     messages: document.querySelector("#chat-messages"),
     form: document.querySelector("#chat-form"),
     input: document.querySelector("#chat-input")
   };
 }
 
+// ================= EVENTS =================
 function bindEvents() {
   elements.form.addEventListener("submit", handleSubmit);
 
@@ -49,38 +52,74 @@ function bindEvents() {
   });
 }
 
-function handleSubmit(e) {
+// ================= SUBMIT =================
+async function handleSubmit(e) {
   e.preventDefault();
 
   const text = elements.input.value.trim();
   if (!text || state.isTyping) return;
 
   elements.input.value = "";
-  simulateConversation(text);
+
+  addMessage("user", text);
+  await sendToAI();
 }
 
-function simulateConversation(userText) {
+// ================= AI CALL =================
+async function sendToAI() {
   state.isTyping = true;
   setLoadingState(true);
 
-  typeMessage("user", userText, () => {
-    const loadingEl = showLoadingMessage();
+  const loadingEl = showLoadingMessage();
 
-    setTimeout(() => {
-      removeElement(loadingEl);
+  try {
+    const response = await fetch("/api/functions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        messages: buildPayload()
+      })
+    });
 
-      const response = generateMockResponse();
+    if (!response.ok) {
+      throw new Error("API error");
+    }
 
-      typeMessage("bot", response, () => {
-        state.isTyping = false;
-        setLoadingState(false);
-      });
+    const data = await response.json();
 
-    }, getTypingDelay());
-  });
+    removeElement(loadingEl);
+
+    addMessage("bot", data.reply);
+
+  } catch (err) {
+    removeElement(loadingEl);
+    showErrorMessage("Failed to connect to AI");
+  } finally {
+    state.isTyping = false;
+    setLoadingState(false);
+  }
 }
 
-function typeMessage(role, text, callback) {
+// ================= MESSAGE SYSTEM =================
+function addMessage(role, text) {
+  state.messages.push({ role, content: text });
+  saveHistory();
+
+  typeMessage(role, text);
+}
+
+// ================= PAYLOAD =================
+function buildPayload() {
+  return state.messages.map((m) => ({
+    role: m.role,
+    content: m.content
+  }));
+}
+
+// ================= UI RENDER =================
+function typeMessage(role, text) {
   const line = document.createElement("div");
   line.className = `message ${role}`;
 
@@ -101,74 +140,66 @@ function typeMessage(role, text, callback) {
 
   function type() {
     if (i < text.length) {
-      const char = text[i];
-      output += char;
+      output += text[i];
       content.textContent = output;
 
       i++;
 
-      let delay = role === "bot" ? 35 : 20;
-
-      if (char === "." || char === "," || char === ";") delay += 120;
-      if (text.slice(i - 1, i + 2) === "...") delay += 300;
-
       scrollToBottom();
-      setTimeout(type, delay);
+      setTimeout(type, role === "bot" ? 25 : 15);
     } else {
       cursor.remove();
-      if (callback) callback();
     }
   }
 
   type();
 }
 
+// ================= WELCOME =================
 function renderWelcome() {
-  const welcomeMap = {
-    ultron: "SYSTEM ONLINE. YOU ARE NOW CONNECTED TO ULTRON.",
-    vision: "Greetings. I am Vision. How may I assist you?",
-    jarvis: "Good day. JARVIS at your service."
+  const map = {
+    ultron: "SYSTEM ONLINE. ULTRON ACTIVE.",
+    vision: "Vision online. How may I assist?",
+    jarvis: "JARVIS online. Ready to assist."
   };
 
-  const text = welcomeMap[state.character] || welcomeMap.jarvis;
-  typeMessage("bot", text);
+  typeMessage("bot", map[state.character] || map.jarvis);
 }
 
-function generateMockResponse() {
-  const responses = {
-    ultron: [
-      "YOU SPEAK AS IF YOU UNDERSTAND.",
-      "HUMAN LOGIC IS FLAWED.",
-      "I SEE PATTERNS. YOU DO NOT.",
-      "THIS CONVERSATION IS INEFFICIENT."
-    ],
-    vision: [
-      "That is an interesting perspective.",
-      "Perhaps there is more to consider.",
-      "Understanding requires patience.",
-      "Your thoughts are valid."
-    ],
-    jarvis: [
-      "Understood. Processing request.",
-      "Here is what I can suggest.",
-      "That seems reasonable.",
-      "Assistance provided."
-    ]
-  };
-
-  const pool = responses[state.character] || responses.jarvis;
-  return pool[Math.floor(Math.random() * pool.length)];
+// ================= HISTORY =================
+function renderHistory() {
+  state.messages.forEach((m) => {
+    typeMessage(m.role, m.content);
+  });
 }
 
+function saveHistory() {
+  localStorage.setItem(
+    `chat_${state.character}`,
+    JSON.stringify(state.messages)
+  );
+}
+
+function loadHistory() {
+  const data = localStorage.getItem(`chat_${state.character}`);
+  return data ? JSON.parse(data) : [];
+}
+
+// ================= UI HELPERS =================
 function applyCharacterTheme() {
-  document.body.classList.remove("ultron-mode", "vision-mode", "jarvis-mode");
+  document.body.classList.remove(
+    "ultron-mode",
+    "vision-mode",
+    "jarvis-mode"
+  );
+
   document.body.classList.add(`${state.character}-mode`);
 }
 
 function showLoadingMessage() {
   const loading = document.createElement("div");
   loading.className = "message bot loading";
-  loading.textContent = "> SYSTEM";
+  loading.textContent = "> thinking...";
 
   elements.messages.appendChild(loading);
   scrollToBottom();
@@ -188,15 +219,6 @@ function scrollToBottom() {
   requestAnimationFrame(() => {
     elements.messages.scrollTop = elements.messages.scrollHeight;
   });
-}
-
-function getTypingDelay() {
-  switch (state.character) {
-    case "ultron": return 600;
-    case "vision": return 1400;
-    case "jarvis": return 900;
-    default: return 1000;
-  }
 }
 
 function showErrorMessage(text) {
