@@ -13,7 +13,7 @@ export function renderAbout() {
       </header>
 
       <div class="about-grid">
-        <article class="about-panel">
+        <article class="about-panel about-panel-ultron">
           <span class="about-label">> STATUS</span>
           <h2>SPA activa</h2>
           <p>
@@ -22,7 +22,7 @@ export function renderAbout() {
           </p>
         </article>
 
-        <article class="about-panel">
+        <article class="about-panel about-panel-vision">
           <span class="about-label">> DESIGN</span>
           <h2>Terminal visual</h2>
           <p>
@@ -32,7 +32,7 @@ export function renderAbout() {
           </p>
         </article>
 
-        <article class="about-panel">
+        <article class="about-panel about-panel-jarvis">
           <span class="about-label">> CHARACTER</span>
           <h2>${selectedCharacter.toUpperCase()}</h2>
           <p>

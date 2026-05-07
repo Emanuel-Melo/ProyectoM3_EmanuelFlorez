@@ -155,17 +155,17 @@ body {
 .about-kicker,
 .about-label,
 .about-log {
-  color: var(--accent-color);
+  color: white;
   font-weight: 700;
   text-transform: uppercase;
 }
 
 .about-header h1 {
-  color: var(--accent-color);
+  color: white;
   font-size: clamp(1.8rem, 7vw, 4rem);
   line-height: 1;
   text-transform: uppercase;
-  text-shadow: 0 0 0.35em color-mix(in srgb, var(--accent-color), transparent 45%);
+  text-shadow: 0 0 0.35em rgba(255, 255, 255, 0.32);
 }
 
 .about-header p,
@@ -193,9 +193,20 @@ body {
 
 .about-panel h2 {
   margin: 0.7em 0;
-  color: white;
   font-size: 1rem;
   text-transform: uppercase;
+}
+
+.about-panel-ultron h2 {
+  color: #ff2a2a;
+}
+
+.about-panel-vision h2 {
+  color: #ffd54f;
+}
+
+.about-panel-jarvis h2 {
+  color: #4fc3f7;
 }
 
 .about-log {

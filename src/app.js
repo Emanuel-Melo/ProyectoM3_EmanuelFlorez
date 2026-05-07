@@ -135,10 +135,7 @@ function renderChat() {
 
 // ================= ABOUT =================
 function renderAbout() {
-  const character = localStorage.getItem("character") || "jarvis";
-
-  updateTheme(character);
-  updateBackground(character);
+  resetGlobalState();
   app.innerHTML = getAboutTemplate();
 }
 
