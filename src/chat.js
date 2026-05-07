@@ -5,7 +5,6 @@ let state = {
 };
 
 let elements = {};
-let isBound = false;
 
 export function initChat() {
   cacheDOM();
@@ -17,11 +16,7 @@ export function initChat() {
   state.isTyping = false;
 
   applyCharacterTheme();
-
-  if (!isBound) {
-    bindEvents();
-    isBound = true;
-  }
+  bindEvents();
 
   elements.messages.innerHTML = "";
 
@@ -42,14 +37,14 @@ function cacheDOM() {
 
 // ================= EVENTS =================
 function bindEvents() {
-  elements.form.addEventListener("submit", handleSubmit);
+  elements.form.onsubmit = handleSubmit;
 
-  elements.input.addEventListener("keydown", (e) => {
+  elements.input.onkeydown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSubmit(e);
     }
-  });
+  };
 }
 
 // ================= SUBMIT =================

@@ -132,6 +132,76 @@ body {
   color: var(--accent-color);
 }
 
+/* ================= ABOUT ================= */
+.about {
+  width: min(100%, 90ch);
+  height: 100%;
+  padding: 5%;
+  overflow-y: auto;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 5%;
+  -webkit-overflow-scrolling: touch;
+}
+
+.about-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2em;
+}
+
+.about-kicker,
+.about-label,
+.about-log {
+  color: var(--accent-color);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.about-header h1 {
+  color: var(--accent-color);
+  font-size: clamp(1.8rem, 7vw, 4rem);
+  line-height: 1;
+  text-transform: uppercase;
+  text-shadow: 0 0 0.35em color-mix(in srgb, var(--accent-color), transparent 45%);
+}
+
+.about-header p,
+.about-panel p,
+.about-log {
+  line-height: 1.7;
+}
+
+.about-header p {
+  max-width: 68ch;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2%;
+}
+
+.about-panel {
+  border: 1px solid #333;
+  background: rgba(17, 17, 17, 0.72);
+  padding: 4%;
+}
+
+.about-panel h2 {
+  margin: 0.7em 0;
+  color: white;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.about-log {
+  border-top: 1px solid #222;
+  padding-top: 3%;
+  font-size: 0.9rem;
+}
+
 /* ================= BUTTON ================= */
 #start-btn {
   flex: 0 0 10%;
@@ -521,6 +591,10 @@ body.ultron-mode::after {
 
   .card {
     flex: 1;
+  }
+
+  .about-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 

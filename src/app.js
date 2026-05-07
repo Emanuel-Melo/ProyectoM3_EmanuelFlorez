@@ -1,4 +1,5 @@
 import { initChat } from "./chat.js";
+import { renderAbout as getAboutTemplate } from "./about.js";
 
 const app = document.getElementById("app");
 
@@ -98,7 +99,7 @@ function renderHome() {
 
 // ================= CHAT =================
 function renderChat() {
-  const character = localStorage.getItem("character") || "unknown";
+  const character = localStorage.getItem("character") || "jarvis";
 
   app.innerHTML = `
     <section id="chat-container">
@@ -127,18 +128,18 @@ function renderChat() {
   `;
 
   // 🔥 inicializa chat correctamente
+  updateTheme(character);
+  updateBackground(character);
   initChat(character);
 }
 
 // ================= ABOUT =================
 function renderAbout() {
-  app.innerHTML = `
-    <section class="about">
-      <h1>About</h1>
-      <p>Proyecto SPA con AI</p>
-      <a href="/home" data-link>Volver</a>
-    </section>
-  `;
+  const character = localStorage.getItem("character") || "jarvis";
+
+  updateTheme(character);
+  updateBackground(character);
+  app.innerHTML = getAboutTemplate();
 }
 
 // ================= HOME LOGIC =================
