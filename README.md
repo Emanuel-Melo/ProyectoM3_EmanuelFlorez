@@ -142,21 +142,33 @@ https://github.com/Emanuel-Melo/ProyectoM3_EmanuelFlorez.git
 
 ## Capturas
 
-Espacio reservado para capturas finales. Agregar las rutas o enlaces cuando esten listas:
+### Home desktop
 
-```txt
-Home desktop:
-PENDIENTE_AGREGAR_CAPTURA_HOME
+![Home desktop](<Capturas proyecto/Captura 1 home.png>)
 
-Chat funcionando:
-PENDIENTE_AGREGAR_CAPTURA_CHAT
+### Seleccion de Ultron
 
-About:
-PENDIENTE_AGREGAR_CAPTURA_ABOUT
+![Seleccion de Ultron](<Capturas proyecto/Captura 2 personaje 1.png>)
 
-Vista mobile:
-PENDIENTE_AGREGAR_CAPTURA_MOBILE
-```
+### Seleccion de Vision
+
+![Seleccion de Vision](<Capturas proyecto/Captura 3 personaje 2.png>)
+
+### Seleccion de J.A.R.V.I.S.
+
+![Seleccion de J.A.R.V.I.S.](<Capturas proyecto/Captura 4 personaje 3.png>)
+
+### Chat funcionando
+
+![Chat funcionando](<Capturas proyecto/Captura 5 chat.png>)
+
+### About
+
+![Vista About](<Capturas proyecto/Captura 6 about.png>)
+
+### Vista responsive mobile
+
+![Vista responsive mobile](<Capturas proyecto/Captura 7 responsive phone.png>)
 
 ## Uso De AI Durante El Proyecto
 
