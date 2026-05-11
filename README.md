@@ -134,10 +134,10 @@ Completar antes de entregar:
 
 ```txt
 URL publica de Vercel:
-PENDIENTE_AGREGAR_URL_PRODUCCION
+https://proyecto-m3-emanuel-florez.vercel.app 
 
 Repositorio de GitHub:
-PENDIENTE_AGREGAR_URL_REPOSITORIO
+https://github.com/Emanuel-Melo/ProyectoM3_EmanuelFlorez.git 
 ```
 
 ## Capturas
