@@ -134,7 +134,7 @@ Completar antes de entregar:
 
 ```txt
 URL publica de Vercel:
-https://proyecto-m3-emanuel-florez.vercel.app 
+https://proyecto-m3-emanuel-florez.vercel.app/
 
 Repositorio de GitHub:
 https://github.com/Emanuel-Melo/ProyectoM3_EmanuelFlorez.git 
@@ -189,6 +189,10 @@ Las decisiones finales se validaron manualmente en el navegador, con `vercel dev
 - La Vercel Function lee `process.env.GEMINI_API_KEY`.
 - `.env` esta en `.gitignore`.
 - `node_modules` esta en `.gitignore`.
+
+## Uso de Inteligencia Artificial
+
+Se realizó parte del desarrollo del proyecto con ayuda de chat GPT, para visualizar exactamente que usos se le dieron frente al proyecto realizado, entre en la carpeta llamada "Uso IA", donde encontrará exactamente como fueron desarrolladas las promts y como se llevó a cabo las respuestas.
 
 ## Notas
 
