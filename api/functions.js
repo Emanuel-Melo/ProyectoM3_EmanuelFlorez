@@ -125,7 +125,7 @@ export default async function handler(req, res) {
       console.error("Gemini error:", errorText);
 
       return res.status(500).json({
-        reply: "Error con Gemini. Revisa la API key, el modelo o los logs de Vercel."
+        reply: getGeminiErrorMessage(errorText)
       });
     }
 
@@ -156,4 +156,13 @@ function toGeminiContents(messages) {
       role: message.role === "user" ? "user" : "model",
       parts: [{ text: String(message.content) }]
     }));
+}
+
+function getGeminiErrorMessage(errorText) {
+  try {
+    const data = JSON.parse(errorText);
+    return data?.error?.message || "Error con Gemini. Revisa la API key, el modelo o los logs de Vercel.";
+  } catch {
+    return errorText || "Error con Gemini. Revisa la API key, el modelo o los logs de Vercel.";
+  }
 }

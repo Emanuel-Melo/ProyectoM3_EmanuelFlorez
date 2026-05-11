@@ -16,7 +16,9 @@ export function initChat() {
   state.isTyping = false;
 
   applyCharacterTheme();
+  renderChatControls();
   bindEvents();
+  updateHistoryIndicator();
 
   elements.messages.innerHTML = "";
 
@@ -31,7 +33,8 @@ function cacheDOM() {
   elements = {
     messages: document.querySelector("#chat-messages"),
     form: document.querySelector("#chat-form"),
-    input: document.querySelector("#chat-input")
+    input: document.querySelector("#chat-input"),
+    header: document.querySelector("#chat-header")
   };
 }
 
@@ -45,6 +48,11 @@ function bindEvents() {
       handleSubmit(e);
     }
   };
+
+  const clearButton = document.getElementById("clear-history-btn");
+  if (clearButton) {
+    clearButton.onclick = clearHistory;
+  }
 }
 
 // ================= SUBMIT =================
@@ -118,10 +126,15 @@ async function parseApiResponse(response) {
 
 // ================= MESSAGE SYSTEM =================
 function addMessage(role, text) {
-  state.messages.push({ role, content: text });
+  state.messages.push({
+    role,
+    content: text,
+    timestamp: new Date().toISOString()
+  });
   saveHistory();
+  updateHistoryIndicator();
 
-  typeMessage(role, text);
+  typeMessage(role, text, state.messages[state.messages.length - 1].timestamp);
 }
 
 // ================= PAYLOAD =================
@@ -133,9 +146,14 @@ function buildPayload() {
 }
 
 // ================= UI RENDER =================
-function typeMessage(role, text) {
+function typeMessage(role, text, timestamp = new Date().toISOString()) {
   const line = document.createElement("div");
   line.className = `message ${role}`;
+
+  const meta = document.createElement("span");
+  meta.className = "message-time";
+  meta.textContent = `[${formatTime(timestamp)}] `;
+  line.appendChild(meta);
 
   if (role === "bot") {
     const prefix = document.createElement("span");
@@ -152,6 +170,16 @@ function typeMessage(role, text) {
 
   line.appendChild(content);
   line.appendChild(cursor);
+
+  if (role === "bot") {
+    const copyButton = document.createElement("button");
+    copyButton.className = "copy-response";
+    copyButton.type = "button";
+    copyButton.textContent = "COPIAR";
+    copyButton.setAttribute("aria-label", "Copiar respuesta");
+    copyButton.onclick = () => copyToClipboard(text, copyButton);
+    line.appendChild(copyButton);
+  }
 
   elements.messages.appendChild(line);
   scrollToBottom();
@@ -200,7 +228,7 @@ function renderWelcome() {
 // ================= HISTORY =================
 function renderHistory() {
   state.messages.forEach((m) => {
-    typeMessage(m.role, m.content);
+    typeMessage(m.role, m.content, m.timestamp);
   });
 }
 
@@ -213,7 +241,12 @@ function saveHistory() {
 
 function loadHistory() {
   const data = localStorage.getItem(`chat_${state.character}`);
-  return data ? JSON.parse(data) : [];
+
+  try {
+    return data ? JSON.parse(data) : [];
+  } catch {
+    return [];
+  }
 }
 
 // ================= UI HELPERS =================
@@ -230,7 +263,7 @@ function applyCharacterTheme() {
 function showLoadingMessage() {
   const loading = document.createElement("div");
   loading.className = "message bot loading";
-  loading.textContent = `> ${getCharacterLabel()}: thinking...`;
+  loading.textContent = `> ${getCharacterLabel()}: escribiendo...`;
 
   elements.messages.appendChild(loading);
   scrollToBottom();
@@ -255,8 +288,60 @@ function scrollToBottom() {
 function showErrorMessage(text) {
   const line = document.createElement("div");
   line.className = "message bot error";
-  line.textContent = `> ERROR: ${text}`;
+  line.textContent = `[${formatTime()}] > ERROR: ${text}`;
 
   elements.messages.appendChild(line);
   scrollToBottom();
+}
+
+function renderChatControls() {
+  if (!elements.header) return;
+
+  elements.header.innerHTML = `
+    <span>> SYSTEM: ${getCharacterLabel()}</span>
+    <span id="history-status" class="history-status">> HISTORIAL: VACIO</span>
+  `;
+}
+
+function updateHistoryIndicator() {
+  const status = document.getElementById("history-status");
+  if (!status) return;
+
+  status.textContent = state.messages.length > 0
+    ? `> HISTORIAL: GUARDADO (${state.messages.length})`
+    : "> HISTORIAL: VACIO";
+}
+
+function clearHistory() {
+  localStorage.removeItem(`chat_${state.character}`);
+  state.messages = [];
+  elements.messages.innerHTML = "";
+  updateHistoryIndicator();
+  renderWelcome();
+}
+
+function formatTime(timestamp = new Date().toISOString()) {
+  const date = new Date(timestamp);
+
+  if (Number.isNaN(date.getTime())) {
+    return "--:--";
+  }
+
+  return date.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}
+
+async function copyToClipboard(text, button) {
+  try {
+    await navigator.clipboard.writeText(text);
+    button.textContent = "COPIADO";
+  } catch {
+    button.textContent = "ERROR";
+  } finally {
+    setTimeout(() => {
+      button.textContent = "COPIAR";
+    }, 1200);
+  }
 }

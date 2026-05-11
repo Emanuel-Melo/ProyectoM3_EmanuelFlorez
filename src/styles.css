@@ -16,6 +16,7 @@ body {
   font-family: "Fira Code", monospace;
 }
 
+
 /* ================= NAV ================= */
 .nav {
   position: fixed;
@@ -39,6 +40,7 @@ body {
 .nav a:hover {
   text-shadow: 0 0 0.5em var(--accent-color);
 }
+
 
 /* ================= APP ================= */
 #app {
@@ -623,6 +625,37 @@ body.vision-mode::before {
   overflow: hidden;
 }
 
+#chat-header {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1%;
+  color: var(--accent-color);
+  border-bottom: 1px solid #222;
+  padding-bottom: 2%;
+  font-weight: 700;
+}
+
+.history-status {
+  color: white;
+  font-size: 0.85rem;
+}
+
+#clear-history-btn {
+  background: transparent;
+  border: 1px solid #444;
+  color: white;
+  padding: 1% 2%;
+  cursor: pointer;
+  font-family: "Fira Code", monospace;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+#clear-history-btn:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
 #chat-messages {
   flex: 1;
   min-height: 0;
@@ -638,6 +671,12 @@ body.vision-mode::before {
 
 .message {
   white-space: pre-wrap;
+  position: relative;
+  padding-right: 12%;
+}
+
+.message-time {
+  color: #777;
 }
 
 .message.user {
@@ -650,6 +689,24 @@ body.vision-mode::before {
 }
 
 .message.bot {
+  color: var(--accent-color);
+}
+
+.copy-response {
+  position: absolute;
+  right: 0;
+  top: 0;
+  border: 1px solid #333;
+  background: transparent;
+  color: #777;
+  cursor: pointer;
+  font-family: "Fira Code", monospace;
+  font-size: 0.72rem;
+  padding: 0.2em 0.5em;
+}
+
+.copy-response:hover {
+  border-color: var(--accent-color);
   color: var(--accent-color);
 }
 

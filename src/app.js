@@ -138,7 +138,8 @@ function renderChat() {
           <span class="input-cursor">█</span>
         </div>
 
-        <button type="submit">SEND</button>
+        <button type="button" id="clear-history-btn">Borrar historial</button>
+        <button type="submit">Enviar</button>
       </form>
     </section>
   `;
